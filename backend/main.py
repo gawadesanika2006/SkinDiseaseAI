@@ -5,7 +5,13 @@ import torch
 import io
 import sys
 import os
+import gc
 from pymongo import MongoClient
+
+# ==========================================
+# RENDER 512MB RAM MEMORY OPTIMIZATION
+# ==========================================
+torch.set_num_threads(1)  # Limit CPU threads to save RAM
 
 # ==========================================
 # FIND PROJECT FILES
@@ -81,95 +87,100 @@ except Exception as e:
 async def predict(
     file: UploadFile = File(...)
 ):
-    # Get model lazily on request
-    model_instance = get_model()
-
-    # Read uploaded image
-    image_bytes = await file.read()
-
-    image = Image.open(
-        io.BytesIO(image_bytes)
-    ).convert("RGB")
-
-    # Preprocess image
-    image_tensor = image_transforms(image)
-    image_tensor = image_tensor.unsqueeze(0)
-
-    # AI prediction
-    with torch.no_grad():
-        output = model_instance(image_tensor)
-        probabilities = torch.softmax(
-            output,
-            dim=1
-        )
-        confidence, predicted_class = torch.max(
-            probabilities,
-            1
-        )
-
-    # Get disease name
-    predicted_label = reverse_label_map[
-        predicted_class.item()
-    ]
-
-    confidence_percentage = (
-        confidence.item() * 100
-    )
-
-    # Get information from MongoDB safely
-    disease_info = None
     try:
-        disease_info = disease_collection.find_one(
-            {
-                "name": predicted_label
-            },
-            {
-                "_id": 0
-            }
-        )
-    except Exception as e:
-        print(f"Database query error: {e}")
+        # Get model lazily on request
+        model_instance = get_model()
 
-    # Return result
-    if disease_info:
+        # Read uploaded image
+        image_bytes = await file.read()
+
+        image = Image.open(
+            io.BytesIO(image_bytes)
+        ).convert("RGB")
+
+        # Preprocess image
+        image_tensor = image_transforms(image)
+        image_tensor = image_tensor.unsqueeze(0)
+
+        # AI prediction
+        with torch.no_grad():
+            output = model_instance(image_tensor)
+            probabilities = torch.softmax(
+                output,
+                dim=1
+            )
+            confidence, predicted_class = torch.max(
+                probabilities,
+                1
+            )
+
+        # Get disease name
+        predicted_label = reverse_label_map[
+            predicted_class.item()
+        ]
+
+        confidence_percentage = (
+            confidence.item() * 100
+        )
+
+        # Get information from MongoDB safely
+        disease_info = None
+        try:
+            disease_info = disease_collection.find_one(
+                {
+                    "name": predicted_label
+                },
+                {
+                    "_id": 0
+                }
+            )
+        except Exception as e:
+            print(f"Database query error: {e}")
+
+        # Return result
+        if disease_info:
+            return {
+                "prediction": predicted_label,
+                "confidence": round(
+                    confidence_percentage,
+                    2
+                ),
+                "description": disease_info.get(
+                    "description",
+                    ""
+                ),
+                "causes": disease_info.get(
+                    "causes",
+                    []
+                ),
+                "general_care": disease_info.get(
+                    "general_care",
+                    []
+                ),
+                "medical_attention": disease_info.get(
+                    "medical_attention",
+                    ""
+                )
+            }
+
+        # Fallback
         return {
             "prediction": predicted_label,
             "confidence": round(
                 confidence_percentage,
                 2
             ),
-            "description": disease_info.get(
-                "description",
-                ""
-            ),
-            "causes": disease_info.get(
-                "causes",
-                []
-            ),
-            "general_care": disease_info.get(
-                "general_care",
-                []
-            ),
-            "medical_attention": disease_info.get(
-                "medical_attention",
-                ""
-            )
+            "description": "",
+            "causes": [],
+            "general_care": [],
+            "medical_attention":
+                "Please consult a dermatologist "
+                "for professional evaluation."
         }
 
-    # Fallback
-    return {
-        "prediction": predicted_label,
-        "confidence": round(
-            confidence_percentage,
-            2
-        ),
-        "description": "",
-        "causes": [],
-        "general_care": [],
-        "medical_attention":
-            "Please consult a dermatologist "
-            "for professional evaluation."
-    }
+    finally:
+        # Clear unused memory after prediction
+        gc.collect()
 
 
 # ==========================================
