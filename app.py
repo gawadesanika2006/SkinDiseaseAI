@@ -85,10 +85,9 @@ if uploaded_file is not None:
             
             predicted_label = reverse_label_map[predicted_class.item()]
             confidence_percentage = round(confidence.item() * 100, 2)
-            
-            # Fetch from MongoDB if available
+           # Fetch from MongoDB if available
             disease_info = None
-           if disease_collection is not None:
+            if disease_collection is not None:
                 try:
                     disease_info = disease_collection.find_one({"name": predicted_label}, {"_id": 0})
                 except:
