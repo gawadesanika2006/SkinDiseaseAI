@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkinNova AI | Smart Skin Analysis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="page">
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="logo">
+                <div class="logo-icon">
+                    ✚
+                </div>
+                <div class="logo-text">
+                    <h2>SkinNova AI</h2>
+                    <span>AI Skin Analysis</span>
+                </div>
+            </div>
+
+            <div class="nav-status">
+                <span class="status-dot"></span>
+                <span>AI System Ready</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+    <section class="hero">
+        <div class="hero-glow"></div>
+        <span class="badge">
+            ✦ AI-ASSISTED ANALYSIS
+        </span>
+
+        <h1>
+            Understand Your Skin
+            <span>Better.</span>
+        </h1>
+
+        <p>
+            Upload a skin lesion image and get an
+            AI-assisted screening result using
+            Digital Image Processing and Machine
+            Learning techniques.
+        </p>
+
+        <div class="hero-features">
+            <div>
+                <span>✓</span>
+                Image Analysis
+            </div>
+            <div>
+                <span>✓</span>
+                AI Prediction
+            </div>
+            <div>
+                <span>✓</span>
+                Instant Result
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         UPLOAD CARD
+    ====================================================== -->
+    <section class="upload-card">
+
+        <!-- CARD HEADER -->
+        <div class="card-title">
+            <div class="title-icon">
+                ↑
+            </div>
+            <div class="title-content">
+                <h2>
+                    Upload Skin Image
+                </h2>
+                <p>
+                    Select a clear image of the skin lesion.
+                </p>
+            </div>
+
+            <div class="uploaded-badge">
+                <span>Uploaded</span>
+                <strong id="uploadCount">
+                    0
+                </strong>
+            </div>
+        </div>
+
+        <!-- =================================================
+             UPLOAD AREA
+        ================================================== -->
+        <div
+            class="basket-upload"
+            id="basketUpload"
+        >
+
+            <!-- FILE INFORMATION -->
+            <div class="upload-file-card">
+                <div class="file-icon">
+                    IMG
+                </div>
+
+                <div class="file-details">
+                    <strong id="fileName">
+                        Choose skin image
+                    </strong>
+
+                    <div class="progress-container">
+                        <div
+                            class="progress-bar"
+                            id="progressBar"
+                        ></div>
+                    </div>
+
+                    <small id="uploadStatus">
+                        Click or drag image to upload
+                    </small>
+                </div>
+
+                <div
+                    class="file-done"
+                    id="fileDone"
+                ></div>
+            </div>
+
+            <!-- FILE INPUT (With mobile camera support) -->
+            <input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+                capture="environment"
+                hidden
+            >
+
+            <!-- =================================================
+                 BASKETBALL AREA
+            ================================================== -->
+            <div class="basketball-zone">
+
+                <!-- Decorative medical particles -->
+                <span class="medical-particle p1"></span>
+                <span class="medical-particle p2"></span>
+                <span class="medical-particle p3"></span>
+                <span class="medical-particle p4"></span>
+
+                <!-- HOOP -->
+                <div class="basketball-hoop">
+                    <div class="backboard"></div>
+                    <div class="rim"></div>
+                    <div class="net">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <!-- BASKETBALL -->
+                <div
+                    class="basketball"
+                    id="basketball"
+                >
+                    <span></span>
+                </div>
+
+                <!-- CENTER MESSAGE -->
+                <div class="upload-center-text">
+                    <div class="upload-cloud-icon">
+                        ↑
+                    </div>
+                    <strong>
+                        Drop your skin image here
+                    </strong>
+                    <span>
+                        or click anywhere to browse
+                    </span>
+                </div>
+
+                <!-- HINT -->
+                <div
+                    class="shoot-hint"
+                    id="shootHint"
+                >
+                    🏀 Select an image & release to shoot
+                </div>
+            </div>
+
+            <!-- DROP TEXT -->
+            <div class="drop-message">
+                <span>
+                    Click to upload
+                </span>
+                or drag & drop your skin image
+            </div>
+        </div>
+
+        <!-- =================================================
+             SELECTED IMAGE PREVIEW
+        ================================================== -->
+        <div
+            class="selected-image"
+            id="selectedImageBox"
+        >
+            <div class="preview-image-wrapper">
+                <img
+                    id="selectedImage"
+                    src=""
+                    alt="Selected skin image"
+                >
+                <span class="preview-check">
+                    ✓
+                </span>
+            </div>
+
+            <div class="selected-info">
+                <span class="preview-label">
+                    IMAGE READY
+                </span>
+                <strong>
+                    Image uploaded successfully
+                </strong>
+                <p id="selectedName"></p>
+            </div>
+
+            <button
+                type="button"
+                id="changeButton"
+            >
+                Change
+            </button>
+        </div>
+
+        <!-- =================================================
+             ANALYZE BUTTON
+        ================================================== -->
+        <button
+            id="analyzeButton"
+            class="analyze-btn"
+        >
+            <span class="analyze-icon">
+                ✦
+            </span>
+            <span>
+                Analyze Image
+            </span>
+            <span class="arrow">
+                →
+            </span>
+        </button>
+
+        <!-- LOADING -->
+        <div id="loading">
+            <div class="loader"></div>
+            <span>
+                AI is analyzing your image...
+            </span>
+        </div>
+
+        <div class="security-note">
+            🔒 Your image is used only for this analysis
+        </div>
+    </section>
+
+    <!-- =====================================================
+         RESULT SECTION
+    ====================================================== -->
+    <section
+        class="result"
+        id="resultSection"
+    >
+
+        <!-- RESULT HEADING -->
+        <div class="result-heading">
+            <div>
+                <span class="small-title">
+                    ✦ AI ANALYSIS
+                </span>
+                <h2>
+                    Analysis Result
+                </h2>
+                <p>
+                    AI-assisted screening based on the uploaded image.
+                </p>
+            </div>
+
+            <div class="result-icon">
+                ✦
+            </div>
+        </div>
+
+        <!-- =================================================
+             PREDICTION
+        ================================================== -->
+        <div class="prediction-box">
+            <div class="prediction-left">
+                <span class="label">
+                    PREDICTION
+                </span>
+                <div
+                    class="prediction"
+                    id="prediction"
+                >
+                    -
+                </div>
+                <div class="prediction-status">
+                    <span></span>
+                    AI classification completed
+                </div>
+            </div>
+
+            <div class="confidence-card">
+                <div
+                    class="confidence-ring"
+                    id="confidenceRing"
+                >
+                    <div class="confidence-inner">
+                        <strong id="confidenceNumber">
+                            --
+                        </strong>
+                        <small>
+                            confidence
+                        </small>
+                    </div>
+                </div>
+
+                <div class="confidence-text">
+                    <span>
+                        Confidence Score
+                    </span>
+                    <strong id="confidence">
+                        Confidence: -
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================
+             INFORMATION GRID
+        ================================================== -->
+        <div class="info-grid">
+
+            <!-- DESCRIPTION -->
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon blue">
+                        i
+                    </div>
+                    <h3>
+                        Description
+                    </h3>
+                </div>
+
+                <p id="description">
+                    -
+                </p>
+            </div>
+
+            <!-- CAUSES -->
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon purple">
+                        !
+                    </div>
+                    <h3>
+                        Causes / Associations
+                    </h3>
+                </div>
+
+                <ul id="causes">
+                    <li>
+                        -
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GENERAL CARE -->
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-icon green">
+                        ✓
+                    </div>
+                    <h3>
+                        General Care
+                    </h3>
+                </div>
+
+                <ul id="generalCare">
+                    <li>
+                        -
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- =================================================
+             MEDICAL ATTENTION
+        ====================================================== -->
+        <div class="warning">
+            <div class="warning-icon">
+                !
+            </div>
+
+            <div>
+                <h3>
+                    When to Seek Medical Attention
+                </h3>
+                <p id="medicalAttention">
+                    -
+                </p>
+            </div>
+        </div>
+
+        <!-- =================================================
+             DISCLAIMER
+        ================================================== -->
+        <div class="disclaimer">
+            <div class="disclaimer-icon">
+                ⚕
+            </div>
+
+            <div>
+                <strong>
+                    Important Medical Disclaimer
+                </strong>
+                <p>
+                    This project is an educational AI
+                    screening prototype and is not a
+                    medical diagnosis. AI predictions can
+                    be incorrect. Please consult a qualified
+                    healthcare professional for concerning,
+                    changing, or persistent skin lesions.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+    <footer>
+        <div class="footer-line"></div>
+        <p>
+            SkinNova AI
+            <span>•</span>
+            Educational Screening Prototype
+        </p>
+    </footer>
+
+</div>
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+<script>
+
+/* =========================================================
+    ELEMENTS
+========================================================= */
+const imageInput = document.getElementById("imageInput");
+const basketUpload = document.getElementById("basketUpload");
+const basketball = document.getElementById("basketball");
+const shootHint = document.getElementById("shootHint");
+const fileName = document.getElementById("fileName");
+const progressBar = document.getElementById("progressBar");
+const uploadStatus = document.getElementById("uploadStatus");
+const fileDone = document.getElementById("fileDone");
+const uploadCount = document.getElementById("uploadCount");
+const selectedImageBox = document.getElementById("selectedImageBox");
+const selectedImage = document.getElementById("selectedImage");
+const selectedName = document.getElementById("selectedName");
+const changeButton = document.getElementById("changeButton");
+const analyzeButton = document.getElementById("analyzeButton");
+const loading = document.getElementById("loading");
+const resultSection = document.getElementById("resultSection");
+const confidenceRing = document.getElementById("confidenceRing");
+const confidenceNumber = document.getElementById("confidenceNumber");
+
+let currentFile = null;
+let uploadedCount = 0;
+
+/* =========================================================
+    OPEN FILE SELECTOR
+========================================================= */
+basketUpload.addEventListener("click", function(event) {
+    if (
+        event.target.closest(".upload-file-card") ||
+        event.target.closest(".basketball-zone") ||
+        event.target.closest(".drop-message")
+    ) {
+        imageInput.click();
+    }
+});
+
+/* =========================================================
+    FILE SELECT
+========================================================= */
+imageInput.addEventListener("change", function() {
+    if (this.files.length > 0) {
+        uploadImage(this.files[0]);
+    }
+});
+
+/* =========================================================
+    DRAG OVER
+========================================================= */
+basketUpload.addEventListener("dragover", function(event) {
+    event.preventDefault();
+    basketUpload.classList.add("drag-active");
+    shootHint.textContent = "⬇ Drop image here!";
+});
+
+/* =========================================================
+    DRAG LEAVE
+========================================================= */
+basketUpload.addEventListener("dragleave", function() {
+    basketUpload.classList.remove("drag-active");
+    shootHint.textContent = "🏀 Select an image & release to shoot";
+});
+
+/* =========================================================
+    DROP IMAGE
+========================================================= */
+basketUpload.addEventListener("drop", function(event) {
+    event.preventDefault();
+    basketUpload.classList.remove("drag-active");
+
+    const file = event.dataTransfer.files[0];
+
+    if (file) {
+        if (file.type.startsWith("image/")) {
+            currentFile = file;
+            uploadImage(file);
+        }
+    }
+});
+
+/* =========================================================
+    UPLOAD IMAGE
+========================================================= */
+function uploadImage(file) {
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        return;
+    }
+
+    currentFile = file;
+
+    fileName.textContent = file.name;
+    uploadStatus.textContent = "Uploading...";
+    fileDone.textContent = "";
+    progressBar.style.width = "0%";
+
+    basketball.classList.remove("shooting");
+    void basketball.offsetWidth;
+    basketball.classList.add("shooting");
+
+    shootHint.textContent = "Image selected • Shooting into basket!";
+
+    let progress = 0;
+    const progressTimer = setInterval(function() {
+        progress += 10;
+        progressBar.style.width = progress + "%";
+
+        if (progress >= 100) {
+            clearInterval(progressTimer);
+            uploadComplete(file);
+        }
+    }, 55);
+}
+
+/* =========================================================
+    UPLOAD COMPLETE
+========================================================= */
+function uploadComplete(file) {
+    uploadStatus.textContent = "✓ File uploaded successfully";
+    fileDone.textContent = "Done ✓";
+
+    uploadedCount++;
+    uploadCount.textContent = uploadedCount;
+
+    shootHint.textContent = "✓ Image uploaded successfully";
+    basketUpload.classList.add("uploaded");
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        selectedImage.src = event.target.result;
+        selectedName.textContent = file.name;
+        selectedImageBox.classList.add("show");
+    };
+    reader.readAsDataURL(file);
+}
+
+/* =========================================================
+    CHANGE IMAGE
+========================================================= */
+changeButton.addEventListener("click", function(event) {
+    event.stopPropagation();
+    imageInput.click();
+});
+
+/* =========================================================
+    ANALYZE IMAGE
+========================================================= */
+analyzeButton.addEventListener("click", async function() {
+    const file = currentFile || imageInput.files[0];
+
+    if (!file) {
+        alert("Please select an image first.");
+        return;
+    }
+
+    basketball.classList.remove("shooting");
+    void basketball.offsetWidth;
+    basketball.classList.add("shooting");
+
+    loading.style.display = "flex";
+    analyzeButton.disabled = true;
+    analyzeButton.querySelector("span:nth-child(2)").textContent = "Analyzing...";
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        // Automatic backend URL switching (Local vs Render Live)
+        const backendUrl = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") 
+            ? "http://127.0.0.1:8000/predict" 
+            : "https://skindisease-ai.onrender.com/predict";
+
+        const response = await fetch(backendUrl, {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error("Server returned an error.");
+        }
+
+        const data = await response.json();
+
+        document.getElementById("prediction").textContent = data.prediction;
+
+        let confidenceValue = parseFloat(String(data.confidence).replace("%", ""));
+        if (isNaN(confidenceValue)) {
+            confidenceValue = 0;
+        }
+
+        confidenceValue = Math.max(0, Math.min(100, confidenceValue));
+
+        document.getElementById("confidence").textContent = "Confidence: " + confidenceValue + "%";
+        confidenceNumber.textContent = Math.round(confidenceValue) + "%";
+        confidenceRing.style.setProperty("--confidence", confidenceValue);
+
+        document.getElementById("description").textContent = data.description;
+
+        const causesList = document.getElementById("causes");
+        causesList.innerHTML = "";
+        if (Array.isArray(data.causes)) {
+            data.causes.forEach(function(cause) {
+                const li = document.createElement("li");
+                li.textContent = cause;
+                causesList.appendChild(li);
+            });
+        }
+
+        const careList = document.getElementById("generalCare");
+        careList.innerHTML = "";
+        if (Array.isArray(data.general_care)) {
+            data.general_care.forEach(function(care) {
+                const li = document.createElement("li");
+                li.textContent = care;
+                careList.appendChild(li);
+            });
+        }
+
+        document.getElementById("medicalAttention").textContent = data.medical_attention;
+
+        resultSection.classList.add("show");
+
+        setTimeout(function() {
+            resultSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }, 250);
+
+    } catch(error) {
+        console.error(error);
+        alert("Unable to analyze the image. Make sure the backend server is running.");
+    } finally {
+        loading.style.display = "none";
+        analyzeButton.disabled = false;
+        analyzeButton.querySelector("span:nth-child(2)").textContent = "Analyze Image";
+    }
+});
+
+</script>
+
+</body>
+</html>
