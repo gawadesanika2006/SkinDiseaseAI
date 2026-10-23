@@ -82,7 +82,7 @@ if uploaded_file is not None:
                         st.markdown(f"- {c}")
                 care = disease_info.get('general_care', [])
                 if care:
-                    st.markdown("**General Care:**")
+                    st.markdown(f"**General Care:**")
                     for cr in care:
                         st.markdown(f"- {cr}")
                 st.markdown(f"**Medical Attention:** {disease_info.get('medical_attention', '')}")
