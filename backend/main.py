@@ -55,6 +55,16 @@ def get_model():
             torch.load(model_path, map_location=device)
         )
         m.eval()
+        
+        # --- RENDER 512MB RAM OPTIMIZATION: Dynamic Quantization ---
+        try:
+            m = torch.quantization.quantize_dynamic(
+                m, {torch.nn.Linear}, dtype=torch.qint8
+            )
+            print("Model successfully quantized for low memory!")
+        except Exception as q_err:
+            print(f"Quantization skipped: {q_err}")
+            
         model = m
     return model
 
