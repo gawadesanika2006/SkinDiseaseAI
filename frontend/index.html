@@ -1,953 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkinNova AI | Smart Skin Analysis</title>
     <style>
-        /* Light Theme Modern Styling */
-        :root {
-            --bg-color: #f0f4f8;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --primary: #0284c7;
-            --primary-hover: #0369a1;
-            --accent: #38bdf8;
-            --border-color: #e2e8f0;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: #0e1117;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
         }
-
-        .page {
+        .container {
             width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: var(--card-bg);
-            padding: 15px 25px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-        }
-
-        .navbar-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            background: var(--primary);
-            color: white;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .logo-text h2 {
-            font-size: 1.2rem;
-            color: var(--text-main);
-        }
-
-        .logo-text span {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .nav-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #16a34a;
-            background: #dcfce7;
-            padding: 6px 14px;
-            border-radius: 20px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #16a34a;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
-        }
-
-        /* Hero Section */
-        .hero {
-            background: var(--card-bg);
-            padding: 35px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-        }
-
-        .badge {
-            background: #e0f2fe;
-            color: var(--primary);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            color: var(--text-main);
-            margin-bottom: 12px;
-        }
-
-        .hero h1 span {
-            color: var(--primary);
-        }
-
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1rem;
             max-width: 600px;
-            margin: 0 auto 20px auto;
-            line-height: 1.5;
-        }
-
-        .hero-features {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .hero-features div span {
-            color: #16a34a;
-            font-weight: bold;
-        }
-
-        /* Upload Card */
-        .upload-card {
-            background: var(--card-bg);
+            background: #161b22;
             padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .title-icon {
-            background: #e0f2fe;
-            color: var(--primary);
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             border-radius: 12px;
-            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: center;
         }
-
-        .title-content h2 {
-            font-size: 1.25rem;
-            color: var(--text-main);
+        h2 {
+            color: #58a6ff;
+            margin-bottom: 10px;
         }
-
-        .title-content p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+        p {
+            color: #8b949e;
+            font-size: 14px;
+            margin-bottom: 25px;
         }
-
-        /* Upload Action Buttons (Gallery & Camera) */
-        .upload-actions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .action-btn {
-            background: #f8fafc;
-            border: 2px dashed var(--border-color);
-            padding: 25px 15px;
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            border-color: var(--primary);
-            background: #f0f9ff;
-            transform: translateY(-2px);
-        }
-
-        .action-btn span.icon {
-            font-size: 28px;
-        }
-
-        .action-btn strong {
-            font-size: 1rem;
-            color: var(--text-main);
-        }
-
-        .action-btn small {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* Selected Image Preview */
-        .selected-image {
-            display: none;
-            background: #f8fafc;
-            padding: 15px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            align-items: center;
-            gap: 15px;
-        }
-
-        .selected-image.show {
-            display: flex;
-        }
-
-        .preview-image-wrapper {
-            position: relative;
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-
-        .preview-image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .selected-info {
-            flex-grow: 1;
-        }
-
-        .preview-label {
-            font-size: 0.75rem;
-            color: #16a34a;
-            font-weight: 700;
-        }
-
-        .selected-info strong {
-            font-size: 0.95rem;
-            display: block;
-            color: var(--text-main);
-        }
-
-        .selected-info p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        #changeButton {
-            background: #e2e8f0;
-            border: none;
-            padding: 8px 16px;
+        .upload-box {
+            border: 2px dashed #30363d;
+            padding: 30px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            color: var(--text-main);
-            transition: background 0.2s;
+            transition: border-color 0.3s;
+            margin-bottom: 20px;
+            background: #0d1117;
         }
-
-        #changeButton:hover {
-            background: #cbd5e1;
+        .upload-box:hover {
+            border-color: #58a6ff;
         }
-
-        /* Analyze Button */
+        input[type="file"] {
+            display: none;
+        }
+        .upload-btn {
+            background-color: #238636;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .upload-btn:hover {
+            background-color: #2ea043;
+        }
+        #preview-container {
+            margin-top: 20px;
+            display: none;
+        }
+        #preview-img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
         .analyze-btn {
-            background: var(--primary);
+            background-color: #1f6feb;
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+            margin-top: 15px;
+            display: none;
         }
-
         .analyze-btn:hover {
-            background: var(--primary-hover);
-            transform: translateY(-1px);
+            background-color: #388bfd;
         }
-
-        .analyze-btn:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Loading */
-        #loading {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            color: var(--text-muted);
-            font-weight: 500;
-            padding: 10px;
-        }
-
-        .loader {
-            width: 24px;
-            height: 24px;
-            border: 3px solid #e2e8f0;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .security-note {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* Result Section */
-        .result {
-            display: none;
-            background: var(--card-bg);
-            padding: 35px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .result.show {
-            display: flex;
-        }
-
-        .result-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
-        }
-
-        .small-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .result-heading h2 {
-            font-size: 1.5rem;
-            color: var(--text-main);
-            margin: 5px 0;
-        }
-
-        .result-heading p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .prediction-box {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .prediction-left .label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        .prediction {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 5px 0;
-        }
-
-        .prediction-status {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .prediction-status span {
-            width: 6px;
-            height: 6px;
-            background: #16a34a;
-            border-radius: 50%;
-        }
-
-        .confidence-card {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: white;
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
-
-        .confidence-ring {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: conic-gradient(var(--primary) calc(var(--confidence, 0) * 1%), #e2e8f0 0deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .confidence-inner {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .confidence-inner strong {
-            font-size: 0.75rem;
-            color: var(--text-main);
-        }
-
-        .confidence-inner small {
-            font-size: 0.5rem;
-            color: var(--text-muted);
-        }
-
-        .confidence-text span {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: block;
-        }
-
-        .confidence-text strong {
-            font-size: 1rem;
-            color: var(--text-main);
-        }
-
-        /* Info Grid */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .info-card {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-        }
-
-        .info-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .info-icon {
-            width: 30px;
-            height: 30px;
+        #result-box {
+            margin-top: 25px;
+            text-align: left;
+            background: #0d1117;
+            padding: 15px;
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .info-icon.blue { background: #e0f2fe; color: var(--primary); }
-        .info-icon.purple { background: #f3e8ff; color: #7e22ce; }
-        .info-icon.green { background: #dcfce7; color: #16a34a; }
-
-        .info-card h3 {
-            font-size: 1rem;
-            color: var(--text-main);
-        }
-
-        .info-card p, .info-card ul {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            padding-left: 15px;
-        }
-
-        /* Warning Box */
-        .warning {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            padding: 20px;
-            border-radius: 16px;
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-        }
-
-        .warning-icon {
-            background: #fee2e2;
-            color: #dc2626;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .warning h3 {
-            font-size: 1rem;
-            color: #991b1b;
-            margin-bottom: 4px;
-        }
-
-        .warning p {
-            font-size: 0.85rem;
-            color: #b91c1c;
-            line-height: 1.4;
-        }
-
-        /* Disclaimer */
-        .disclaimer {
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 16px;
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-        }
-
-        .disclaimer-icon {
-            font-size: 24px;
-        }
-
-        .disclaimer strong {
-            font-size: 0.9rem;
-            color: var(--text-main);
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .disclaimer p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        footer span {
-            margin: 0 5px;
-        }
-
-        @media (max-width: 600px) {
-            .upload-actions-grid {
-                grid-template-columns: 1fr;
-            }
-            .prediction-box {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
+            border: 1px solid #30363d;
+            display: none;
         }
     </style>
 </head>
-
 <body>
-<div class="page">
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="navbar-inner">
-            <div class="logo">
-                <div class="logo-icon">✚</div>
-                <div class="logo-text">
-                    <h2>SkinNova AI</h2>
-                    <span>AI Skin Analysis</span>
-                </div>
-            </div>
-            <div class="nav-status">
-                <span class="status-dot"></span>
-                <span>AI System Ready</span>
-            </div>
-        </div>
-    </nav>
+    <div class="container">
+        <h2>✚ SkinNova AI</h2>
+        <p>Understand your skin better using Digital Image Processing and Deep Learning.</p>
 
-    <!-- HERO -->
-    <section class="hero">
-        <span class="badge">✦ AI-ASSISTED ANALYSIS</span>
-        <h1>Understand Your Skin <span>Better.</span></h1>
-        <p>Upload a skin lesion image and get an AI-assisted screening result using Digital Image Processing and Machine Learning techniques.</p>
-        <div class="hero-features">
-            <div><span>✓</span> Image Analysis</div>
-            <div><span>✓</span> AI Prediction</div>
-            <div><span>✓</span> Instant Result</div>
-        </div>
-    </section>
-
-    <!-- UPLOAD CARD -->
-    <section class="upload-card">
-        <div class="card-title">
-            <div class="title-icon">↑</div>
-            <div class="title-content">
-                <h2>Upload Skin Image</h2>
-                <p>Select a clear image from your gallery or capture using your camera.</p>
-            </div>
+        <div class="upload-box" onclick="document.getElementById('file-input').click()">
+            <p>📁 Drag & drop skin image here, or click to browse</p>
+            <label class="upload-btn">Choose Image</label>
+            <input type="file" id="file-input" accept="image/*" onchange="previewImage(event)">
         </div>
 
-        <!-- SEPARATE GALLERY & CAMERA BUTTONS -->
-        <div class="upload-actions-grid">
-            <div class="action-btn" id="galleryBtn">
-                <span class="icon">📁</span>
-                <strong>Choose from Gallery</strong>
-                <small>Select existing image</small>
-            </div>
-
-            <div class="action-btn" id="cameraBtn">
-                <span class="icon">📷</span>
-                <strong>Open Camera</strong>
-                <small>Take a live picture</small>
-            </div>
+        <div id="preview-container">
+            <img id="preview-img" src="" alt="Selected Preview">
+            <br>
+            <button class="analyze-btn" id="analyze-btn" onclick="analyzeImage()">✦ Analyze Image</button>
         </div>
 
-        <!-- HIDDEN FILE INPUTS -->
-        <input type="file" id="galleryInput" accept="image/*" hidden>
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
-
-        <!-- SELECTED IMAGE PREVIEW -->
-        <div class="selected-image" id="selectedImageBox">
-            <div class="preview-image-wrapper">
-                <img id="selectedImage" src="" alt="Selected skin image">
-            </div>
-            <div class="selected-info">
-                <span class="preview-label">IMAGE READY</span>
-                <strong id="selectedName">Image uploaded</strong>
-                <p>Ready for analysis</p>
-            </div>
-            <button type="button" id="changeButton">Change</button>
+        <div id="result-box">
+            <h3 style="color: #58a6ff; margin-top: 0;">📊 Analysis Result</h3>
+            <p id="result-text">Processing...</p>
         </div>
+    </div>
 
-        <!-- ANALYZE BUTTON -->
-        <button id="analyzeButton" class="analyze-btn" disabled>
-            <span>✦</span>
-            <span>Analyze Image</span>
-        </button>
+    <script>
+        let selectedFile = null;
 
-        <!-- LOADING -->
-        <div id="loading">
-            <div class="loader"></div>
-            <span>AI is analyzing your image...</span>
-        </div>
-
-        <div class="security-note">
-            🔒 Your image is used only for this analysis
-        </div>
-    </section>
-
-    <!-- RESULT SECTION -->
-    <section class="result" id="resultSection">
-        <div class="result-heading">
-            <div>
-                <span class="small-title">✦ AI ANALYSIS</span>
-                <h2>Analysis Result</h2>
-                <p>AI-assisted screening based on the uploaded image.</p>
-            </div>
-            <div class="result-icon">✦</div>
-        </div>
-
-        <div class="prediction-box">
-            <div class="prediction-left">
-                <span class="label">PREDICTION</span>
-                <div class="prediction" id="prediction">-</div>
-                <div class="prediction-status">
-                    <span></span> AI classification completed
-                </div>
-            </div>
-
-            <div class="confidence-card">
-                <div class="confidence-ring" id="confidenceRing">
-                    <div class="confidence-inner">
-                        <strong id="confidenceNumber">--</strong>
-                        <small>conf</small>
-                    </div>
-                </div>
-                <div class="confidence-text">
-                    <span>Confidence Score</span>
-                    <strong id="confidence">Confidence: -</strong>
-                </div>
-            </div>
-        </div>
-
-        <div class="info-grid">
-            <div class="info-card">
-                <div class="info-header">
-                    <div class="info-icon blue">i</div>
-                    <h3>Description</h3>
-                </div>
-                <p id="description">-</p>
-            </div>
-
-            <div class="info-card">
-                <div class="info-header">
-                    <div class="info-icon purple">!</div>
-                    <h3>Causes / Associations</h3>
-                </div>
-                <ul id="causes"><li>-</li></ul>
-            </div>
-
-            <div class="info-card">
-                <div class="info-header">
-                    <div class="info-icon green">✓</div>
-                    <h3>General Care</h3>
-                </div>
-                <ul id="generalCare"><li>-</li></ul>
-            </div>
-        </div>
-
-        <div class="warning">
-            <div class="warning-icon">!</div>
-            <div>
-                <h3>When to Seek Medical Attention</h3>
-                <p id="medicalAttention">-</p>
-            </div>
-        </div>
-
-        <div class="disclaimer">
-            <div class="disclaimer-icon">⚕</div>
-            <div>
-                <strong>Important Medical Disclaimer</strong>
-                <p>This project is an educational AI screening prototype and is not a medical diagnosis. Please consult a qualified healthcare professional for concerning lesions.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>SkinNova AI <span>•</span> Educational Screening Prototype</p>
-    </footer>
-
-</div>
-
-<!-- JAVASCRIPT -->
-<script>
-const galleryBtn = document.getElementById("galleryBtn");
-const cameraBtn = document.getElementById("cameraBtn");
-const galleryInput = document.getElementById("galleryInput");
-const cameraInput = document.getElementById("cameraInput");
-
-const selectedImageBox = document.getElementById("selectedImageBox");
-const selectedImage = document.getElementById("selectedImage");
-const selectedName = document.getElementById("selectedName");
-const changeButton = document.getElementById("changeButton");
-const analyzeButton = document.getElementById("analyzeButton");
-const loading = document.getElementById("loading");
-const resultSection = document.getElementById("resultSection");
-const confidenceRing = document.getElementById("confidenceRing");
-const confidenceNumber = document.getElementById("confidenceNumber");
-
-let currentFile = null;
-
-// Trigger Gallery Input
-galleryBtn.addEventListener("click", () => galleryInput.click());
-
-// Trigger Camera Input
-cameraBtn.addEventListener("click", () => cameraInput.click());
-
-galleryInput.addEventListener("change", function() {
-    if (this.files.length > 0) handleFile(this.files[0]);
-});
-
-cameraInput.addEventListener("change", function() {
-    if (this.files.length > 0) handleFile(this.files[0]);
-});
-
-function handleFile(file) {
-    if (!file.type.startsWith("image/")) {
-        alert("Please select a valid image file.");
-        return;
-    }
-    currentFile = file;
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        selectedImage.src = e.target.result;
-        selectedName.textContent = file.name;
-        selectedImageBox.classList.add("show");
-        analyzeButton.disabled = false;
-    };
-    reader.readAsDataURL(file);
-}
-
-changeButton.addEventListener("click", () => {
-    galleryInput.click();
-});
-
-// Analyze Button Action
-analyzeButton.addEventListener("click", async function() {
-    if (!currentFile) {
-        alert("Please select or capture an image first.");
-        return;
-    }
-
-    loading.style.display = "flex";
-    analyzeButton.disabled = true;
-
-    const formData = new FormData();
-    formData.append("file", currentFile);
-
-    try {
-        // Automatic backend URL switching
-        const backendUrl = (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") 
-            ? "http://127.0.0.1:8000/predict" 
-            : "/predict";
-
-        const response = await fetch(backendUrl, {
-            method: "POST",
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error("Server error occurred.");
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-img').src = e.target.result;
+                    document.getElementById('preview-container').style.display = 'block';
+                    document.getElementById('analyze-btn').style.display = 'block';
+                    document.getElementById('result-box').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
         }
 
-        const data = await response.json();
-
-        document.getElementById("prediction").textContent = data.prediction;
-
-        let confidenceValue = parseFloat(String(data.confidence).replace("%", ""));
-        if (isNaN(confidenceValue)) confidenceValue = 0;
-        confidenceValue = Math.max(0, Math.min(100, confidenceValue));
-
-        document.getElementById("confidence").textContent = "Confidence: " + confidenceValue + "%";
-        confidenceNumber.textContent = Math.round(confidenceValue) + "%";
-        confidenceRing.style.setProperty("--confidence", confidenceValue);
-
-        document.getElementById("description").textContent = data.description;
-
-        const causesList = document.getElementById("causes");
-        causesList.innerHTML = "";
-        if (Array.isArray(data.causes) && data.causes.length > 0) {
-            data.causes.forEach(cause => {
-                const li = document.createElement("li");
-                li.textContent = cause;
-                causesList.appendChild(li);
-            });
-        } else {
-            causesList.innerHTML = "<li>No specific causes listed.</li>";
+        function analyzeImage() {
+            const resultBox = document.getElementById('result-box');
+            const resultText = document.getElementById('result-text');
+            resultBox.style.display = 'block';
+            resultText.innerHTML = "<b>AI is analyzing your skin image...</b><br>Please ensure connection to model backend.";
+            
+            // Simulation or direct integration can be wired here
+            setTimeout(() => {
+                resultText.innerHTML = "<b>Prediction:</b> Sample Analysis Completed.<br><i>Note: Connect via Streamlit python handlers for live PyTorch inference.</i>";
+            }, 1500);
         }
-
-        const careList = document.getElementById("generalCare");
-        careList.innerHTML = "";
-        if (Array.isArray(data.general_care) && data.general_care.length > 0) {
-            data.general_care.forEach(care => {
-                const li = document.createElement("li");
-                li.textContent = care;
-                careList.appendChild(li);
-            });
-        } else {
-            careList.innerHTML = "<li>Follow standard dermatological care.</li>";
-        }
-
-        document.getElementById("medicalAttention").textContent = data.medical_attention;
-
-        resultSection.classList.add("show");
-        resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
-
-    } catch (error) {
-        console.error(error);
-        alert("Unable to analyze image. Make sure backend is running.");
-    } finally {
-        loading.style.display = "none";
-        analyzeButton.disabled = false;
-    }
-});
-</script>
-
+    </script>
 </body>
 </html>
