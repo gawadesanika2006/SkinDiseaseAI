@@ -26,24 +26,31 @@ app = FastAPI(
     description="AI-based Skin Lesion classfication prototype",
     version="1.0.0"
 )
+
 # ==========================================
-# LOAD AI MODEL
+# LAZY LOAD AI MODEL (Optimized for Render Free Tier)
 # ==========================================
 
 device = torch.device("cpu")
+model = None
 
-model = create_model(
-    num_classes=len(LABEL_MAP)
-)
+def get_model():
+    global model
+    if model is None:
+        print("Loading PyTorch model into memory...")
+        m = create_model(num_classes=len(LABEL_MAP))
+        
+        # Model path check
+        model_path = "skin_disease_model.pth"
+        if not os.path.exists(model_path) and os.path.exists("backend/skin_disease_model.pth"):
+            model_path = "backend/skin_disease_model.pth"
 
-model.load_state_dict(
-    torch.load(
-        "skin_disease_model.pth",
-        map_location=device
-    )
-)
-
-model.eval()
+        m.load_state_dict(
+            torch.load(model_path, map_location=device)
+        )
+        m.eval()
+        model = m
+    return model
 
 # Convert class numbers to disease names
 reverse_label_map = {
@@ -74,6 +81,9 @@ except Exception as e:
 async def predict(
     file: UploadFile = File(...)
 ):
+    # Get model lazily on request
+    model_instance = get_model()
+
     # Read uploaded image
     image_bytes = await file.read()
 
@@ -87,7 +97,7 @@ async def predict(
 
     # AI prediction
     with torch.no_grad():
-        output = model(image_tensor)
+        output = model_instance(image_tensor)
         probabilities = torch.softmax(
             output,
             dim=1
