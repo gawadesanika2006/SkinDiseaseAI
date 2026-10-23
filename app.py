@@ -88,7 +88,7 @@ if uploaded_file is not None:
             
             # Fetch from MongoDB if available
             disease_info = None
-            if disease_collection:
+           if disease_collection is not None:
                 try:
                     disease_info = disease_collection.find_one({"name": predicted_label}, {"_id": 0})
                 except:
