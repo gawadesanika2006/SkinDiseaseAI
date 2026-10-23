@@ -5,7 +5,7 @@ import os
 st.set_page_config(page_title="SkinNova AI", page_icon="✚", layout="wide")
 
 # Tuzha juna HTML/CSS frontend load karnyasathi (tuzhya fileche naav index.html kiwa templates/index.html asel te ithe taka)
-html_path = "templates/index.html"
+html_path = "D:\Matlab Project\SkinDiseaseAI\frontend\index.html"
 
 if os.path.exists(html_path):
     with open(html_path, "r", encoding="utf-8") as f:
