@@ -359,10 +359,12 @@
 
     <script>
         let base64Image = "";
+        let selectedFile = null;
 
         function handleFile(event) {
             const file = event.target.files[0];
             if (file) {
+                selectedFile = file;
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     base64Image = e.target.result;
@@ -375,26 +377,59 @@
             }
         }
 
-        function sendToStreamlit() {
-            if (!base64Image) {
+        async function sendToStreamlit() {
+            if (!selectedFile && !base64Image) {
                 alert("Please select or upload an image first!");
                 return;
             }
-            window.parent.postMessage({
-                type: "STREAMLIT_ANALYZE",
-                image: base64Image
-            }, "*");
-            
+
             document.getElementById('diseaseTitle').innerText = "Analyzing...";
+            document.getElementById('confidenceText').innerText = "Running PyTorch AI inference...";
+
+            // Also send to Streamlit if embedded in an iframe
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                    type: "STREAMLIT_ANALYZE",
+                    image: base64Image
+                }, "*");
+            }
+
+            // Direct API call to FastAPI backend
+            try {
+                const formData = new FormData();
+                if (selectedFile) {
+                    formData.append("file", selectedFile);
+                } else if (base64Image) {
+                    const blob = await (await fetch(base64Image)).blob();
+                    formData.append("file", blob, "uploaded_lesion.jpg");
+                }
+
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status + ": " + response.statusText);
+                }
+
+                const data = await response.json();
+                renderResult(data);
+            } catch (err) {
+                console.error("API error:", err);
+                if (!(window.parent && window.parent !== window)) {
+                    document.getElementById('diseaseTitle').innerText = "Analysis Failed";
+                    document.getElementById('confidenceText').innerText = "Error: " + err.message;
+                }
+            }
         }
 
-        window.addEventListener("message", function(event) {
-            if (event.data.type === "STREAMLIT_RESULT") {
-                const res = event.data.data;
-                document.getElementById('diseaseTitle').innerText = res.predicted_label;
-                document.getElementById('confidenceText').innerText = "Confidence: " + res.confidence + "%";
-                document.getElementById('descriptionText').innerText = res.description || "No specific details available.";
-                
+        function renderResult(res) {
+            document.getElementById('diseaseTitle').innerText = res.prediction || res.predicted_label || "Detected Condition";
+            document.getElementById('confidenceText').innerText = "Confidence: " + res.confidence + "%";
+            document.getElementById('descriptionText').innerText = res.description || "No specific details available.";
+            
+            if (res.top3 && res.top3.length > 0) {
                 let barsHTML = "";
                 res.top3.forEach(item => {
                     barsHTML += `
@@ -409,25 +444,33 @@
                 });
                 document.getElementById('probBars').innerHTML = barsHTML;
                 document.getElementById('probSection').style.display = 'block';
+            }
 
-                if (res.causes && res.causes.length > 0) {
-                    let rHtml = "";
-                    res.causes.forEach(c => rHtml += `<li>${c}</li>`);
-                    document.getElementById('riskList').innerHTML = rHtml;
-                }
+            if (res.causes && res.causes.length > 0) {
+                let rHtml = "";
+                res.causes.forEach(c => rHtml += `<li>${c}</li>`);
+                document.getElementById('riskList').innerHTML = rHtml;
+            }
 
-                if (res.care && res.care.length > 0) {
-                    let cHtml = "";
-                    res.care.forEach(cr => cHtml += `<li>${cr}</li>`);
-                    document.getElementById('careList').innerHTML = cHtml;
-                }
+            const careData = res.general_care || res.care;
+            if (careData && careData.length > 0) {
+                let cHtml = "";
+                careData.forEach(cr => cHtml += `<li>${cr}</li>`);
+                document.getElementById('careList').innerHTML = cHtml;
+            }
 
-                if (res.medical) {
-                    document.getElementById('medicalText').innerText = res.medical;
-                    document.getElementById('medicalBox').style.display = 'block';
-                }
+            const medData = res.medical_attention || res.medical;
+            if (medData) {
+                document.getElementById('medicalText').innerText = medData;
+                document.getElementById('medicalBox').style.display = 'block';
+            }
 
-                document.getElementById('extraDetails').style.display = 'block';
+            document.getElementById('extraDetails').style.display = 'block';
+        }
+
+        window.addEventListener("message", function(event) {
+            if (event.data && event.data.type === "STREAMLIT_RESULT") {
+                renderResult(event.data.data);
             }
         });
     </script>
