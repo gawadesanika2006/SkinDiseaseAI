@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from PIL import Image
+from PIL import Image, ImageOps
 import torch
 import io
 import sys
@@ -36,7 +36,7 @@ from preprocessing.transforms import image_transforms
 app = FastAPI(
     title="SkinNova AI",
     description="AI-based Skin Lesion classification prototype",
-    version="1.0.0"
+    version="2.0.0"
 )
 
 app.add_middleware(
@@ -54,10 +54,13 @@ reverse_label_map = {
 }
 
 # ==========================================
-# DEFAULT CLINICAL KNOWLEDGE BASE (OFFLINE FALLBACK)
+# CLINICAL KNOWLEDGE BASE & RISK METRICS
 # ==========================================
 DEFAULT_DISEASE_INFO = {
     "Nevus": {
+        "risk_level": "Low Risk (Benign)",
+        "risk_category": "benign",
+        "badge_color": "#10b981",
         "description": "A nevus, commonly called a mole, is a very common benign skin growth formed by clusters of melanocytes (pigment-producing cells).",
         "causes": [
             "Genetic predisposition and inherited traits",
@@ -72,6 +75,9 @@ DEFAULT_DISEASE_INFO = {
         "medical_attention": "A changing, itching, bleeding, asymmetrical, or multi-colored mole should be examined promptly by a dermatologist."
     },
     "Melanoma, NOS": {
+        "risk_level": "Critical Risk (Malignant)",
+        "risk_category": "critical",
+        "badge_color": "#ef4444",
         "description": "Melanoma is an aggressive form of skin cancer arising from melanocytes. Early clinical detection and intervention are essential for optimal outcomes.",
         "causes": [
             "Cumulative and intense ultraviolet (UV) radiation from sunlight or tanning beds",
@@ -86,6 +92,9 @@ DEFAULT_DISEASE_INFO = {
         "medical_attention": "URGENT: Any suspected melanoma requires immediate clinical examination, dermoscopy, and an urgent biopsy by a dermatologist or oncologist."
     },
     "Basal cell carcinoma": {
+        "risk_level": "High Risk (Malignant)",
+        "risk_category": "urgent",
+        "badge_color": "#f97316",
         "description": "Basal cell carcinoma (BCC) is the most frequent form of skin cancer. It typically grows slowly and rarely metastasizes, but can cause localized tissue destruction if untreated.",
         "causes": [
             "Chronic, cumulative ultraviolet (UV) solar radiation exposure",
@@ -100,6 +109,9 @@ DEFAULT_DISEASE_INFO = {
         "medical_attention": "A sore that fails to heal after 3-4 weeks, repeatedly bleeds, or a pearly translucent bump should be evaluated for definitive dermatologic excision."
     },
     "Squamous cell carcinoma, NOS": {
+        "risk_level": "High Risk (Malignant)",
+        "risk_category": "urgent",
+        "badge_color": "#f97316",
         "description": "Squamous cell carcinoma (SCC) is the second most common form of skin cancer, arising from epidermal keratinocytes. It may present as a firm red nodule or rough scaly patch.",
         "causes": [
             "Cumulative long-term lifetime UV exposure",
@@ -114,6 +126,9 @@ DEFAULT_DISEASE_INFO = {
         "medical_attention": "A persistent, growing, crusted, or easily bleeding lesion requires prompt clinical assessment and dermatological biopsy."
     },
     "Solar or actinic keratosis": {
+        "risk_level": "Moderate Risk (Precancerous)",
+        "risk_category": "warning",
+        "badge_color": "#f59e0b",
         "description": "Actinic keratosis is a rough, scaly precancerous skin lesion resulting from decades of UV damage. Some lesions may evolve into invasive squamous cell carcinoma if left untreated.",
         "causes": [
             "Long-term cumulative sun damage",
@@ -128,6 +143,9 @@ DEFAULT_DISEASE_INFO = {
         "medical_attention": "Actinic keratoses should be evaluated and managed by a dermatologist using cryotherapy, topical treatments, or photodynamic therapy to prevent progression."
     },
     "Pigmented benign keratosis": {
+        "risk_level": "Low Risk (Benign)",
+        "risk_category": "benign",
+        "badge_color": "#10b981",
         "description": "A pigmented benign keratosis (such as a seborrheic keratosis or solar lentigo) is a harmless, non-cancerous skin growth that often has a 'stuck-on' appearance.",
         "causes": [
             "Natural skin aging and cellular turnover",
@@ -142,6 +160,9 @@ DEFAULT_DISEASE_INFO = {
         "medical_attention": "Although benign, lesions that become irritated, inflamed, bleed, or mimic malignant melanoma should be professionally inspected by a dermatologist."
     },
     "Dermatofibroma": {
+        "risk_level": "Low Risk (Benign)",
+        "risk_category": "benign",
+        "badge_color": "#10b981",
         "description": "A dermatofibroma is a harmless, firm, benign fibrous nodule in the dermis, commonly occurring on the lower legs and displaying a characteristic dimpling sign when pinched.",
         "causes": [
             "Exact etiology unknown; often considered a reactive fibrous proliferation",
@@ -166,7 +187,7 @@ def get_model():
     global model
     if model is None:
         print("Loading PyTorch model into memory...")
-        m = create_model(num_classes=len(LABEL_MAP))
+        m = create_model(num_classes=len(LABEL_MAP), pretrained=False)
         
         # Model path check - search common locations
         possible_paths = [
@@ -211,7 +232,7 @@ except Exception as e:
 
 
 # ==========================================
-# HEALTH CHECK API
+# API ENDPOINTS
 # ==========================================
 @app.get("/health")
 def health_check():
@@ -222,9 +243,15 @@ def health_check():
     }
 
 
-# ==========================================
-# PREDICT API
-# ==========================================
+@app.get("/api/encyclopedia")
+def get_encyclopedia():
+    return {
+        "status": "success",
+        "diseases": DEFAULT_DISEASE_INFO,
+        "classes": list(LABEL_MAP.keys())
+    }
+
+
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     try:
@@ -234,9 +261,9 @@ async def predict(file: UploadFile = File(...)):
         # Read uploaded image
         image_bytes = await file.read()
 
-        image = Image.open(
-            io.BytesIO(image_bytes)
-        ).convert("RGB")
+        # Open and automatically handle EXIF orientation from phone cameras
+        raw_image = Image.open(io.BytesIO(image_bytes))
+        image = ImageOps.exif_transpose(raw_image).convert("RGB")
 
         # Preprocess image
         image_tensor = image_transforms(image)
@@ -258,7 +285,8 @@ async def predict(file: UploadFile = File(...)):
         top3 = [
             {
                 "label": reverse_label_map[idx.item()],
-                "prob": round(prob.item() * 100, 1)
+                "prob": round(prob.item() * 100, 1),
+                "risk_category": DEFAULT_DISEASE_INFO.get(reverse_label_map[idx.item()], {}).get("risk_category", "benign")
             }
             for prob, idx in zip(top_probs[0], top_indices[0])
         ]
@@ -286,11 +314,17 @@ async def predict(file: UploadFile = File(...)):
             "medical_attention",
             fallback.get("medical_attention", "Please consult a dermatologist for professional clinical evaluation.")
         )
+        risk_level = fallback.get("risk_level", "Clinical Review Recommended")
+        risk_category = fallback.get("risk_category", "warning")
+        badge_color = fallback.get("badge_color", "#f59e0b")
 
         return {
             "prediction": predicted_label,
             "predicted_label": predicted_label,
             "confidence": round(confidence_percentage, 1),
+            "risk_level": risk_level,
+            "risk_category": risk_category,
+            "badge_color": badge_color,
             "top3": top3,
             "description": description,
             "causes": causes,

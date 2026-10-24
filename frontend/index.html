@@ -2,477 +2,2276 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkinNova AI | AI Scanner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SkinNova AI | Clinical Dermatology Scanner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #f8faf9;
-            --emerald-dark: #064e3b;
-            --emerald-primary: #065f46;
-            --emerald-light: #f0fdf4;
-            --emerald-border: #bbf7d0;
-            --text-dark: #111827;
-            --text-muted: #6b7280;
-            --card-bg: #ffffff;
-            --border-color: #e5e7eb;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --surface-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-focus: #059669;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --text-subtle: #94a3b8;
+            --primary: #059669;
+            --primary-dark: #047857;
+            --primary-light: #ecfdf5;
+            --primary-border: #a7f3d0;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --danger-border: #fecaca;
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            --warning-border: #fde68a;
+            --info: #0284c7;
+            --info-light: #f0f9ff;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-dark);
-            padding: 24px 40px;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 0;
+            min-height: 100vh;
         }
 
-        .navbar {
+        /* Top Navigation */
+        header.navbar {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 12px 24px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
+            gap: 16px;
         }
 
-        .brand {
+        .brand-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 20px;
-            color: var(--emerald-dark);
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
         }
 
-        .brand-badge {
-            background: var(--emerald-primary);
+        .brand-icon {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
             color: white;
-            border-radius: 6px;
-            width: 28px;
-            height: 28px;
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .nav-links .active {
-            color: var(--emerald-primary);
-            font-weight: 600;
-            background: #e6f4ea;
-            padding: 6px 14px;
-            border-radius: 20px;
-        }
-
-        .install-btn {
-            background: var(--emerald-primary);
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .header-tag {
-            color: var(--emerald-primary);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .header-title {
-            font-size: 38px;
+            font-size: 20px;
             font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 8px;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text);
             line-height: 1.1;
         }
 
-        .header-subtitle {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-dark);
-            cursor: pointer;
-        }
-
-        .tab-btn.active {
-            background: #fdf6e2;
-            border-color: #f59e0b;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            gap: 24px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-
-        .step-label {
+        .brand-text span {
             font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        nav.nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface-subtle);
+            padding: 4px;
+            border-radius: var(--radius-full);
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13.5px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            color: var(--text);
+        }
+
+        .nav-btn.active {
+            background: var(--surface);
+            color: var(--primary-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pwa-btn {
+            background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .pwa-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
+        }
+
+        /* Main Container */
+        main.container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 20px 80px 20px;
+        }
+
+        /* View Sections */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-title-group h2 {
+            font-size: clamp(28px, 4vw, 38px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 8px;
+        }
+
+        .hero-title-group p {
+            font-size: 15px;
+            color: var(--text-muted);
+            max-width: 580px;
+        }
+
+        .model-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Scanner Tabs */
+        .scanner-mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--surface);
+            padding: 6px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            width: fit-content;
+        }
+
+        .mode-tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-muted);
-            letter-spacing: 1px;
-        }
-
-        .card-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-top: 4px;
-            margin-bottom: 20px;
-        }
-
-        .upload-dropzone {
-            border: 2px dashed #d1d5db;
-            background: #fafafa;
-            border-radius: 8px;
-            padding: 30px;
-            text-align: center;
             cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-tab-btn.active {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* 2-Column Grid Layout */
+        .scanner-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .scanner-grid {
+                grid-template-columns: 1fr;
+            }
+            header.navbar {
+                padding: 10px 14px;
+            }
+            nav.nav-menu {
+                order: 3;
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 8px;
+            }
+            header.navbar {
+                flex-wrap: wrap;
+            }
+        }
+
+        .panel-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .step-tag {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text);
             margin-bottom: 16px;
         }
 
-        .preview-img {
-            max-width: 100%;
-            max-height: 220px;
-            border-radius: 8px;
+        /* Live Camera HUD */
+        .camera-hud-container {
             display: none;
-            margin: 0 auto 16px auto;
+            position: relative;
+            background: #090d16;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            width: 100%;
+            margin-bottom: 16px;
+            border: 2px solid #1e293b;
         }
 
-        .action-btn {
+        .camera-hud-container.active {
+            display: block;
+        }
+
+        #cameraVideo {
             width: 100%;
-            background: var(--emerald-primary);
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .reticle-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reticle-circle {
+            width: 170px;
+            height: 170px;
+            border: 2px dashed rgba(16, 185, 129, 0.85);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+            animation: reticleRotate 25s linear infinite;
+        }
+
+        @keyframes reticleRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .reticle-crosshair {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-left: 2px solid #10b981;
+            border-top: 2px solid #10b981;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .reticle-hint {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #ecfdf5;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+        }
+
+        .camera-controls-bar {
+            position: absolute;
+            bottom: 14px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            z-index: 10;
+        }
+
+        .shutter-btn {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #10b981;
+            cursor: pointer;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            transition: transform 0.1s ease;
+        }
+
+        .shutter-btn:active {
+            transform: scale(0.92);
+        }
+
+        .cam-tool-btn {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        /* Upload Dropzone */
+        .upload-dropzone {
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--radius-md);
+            padding: 36px 20px;
+            text-align: center;
+            background: #fafaf9;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .upload-dropzone:hover, .upload-dropzone.dragover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .dropzone-icon {
+            width: 52px;
+            height: 52px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+            font-size: 24px;
+            color: var(--text-muted);
+        }
+
+        .upload-dropzone h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .upload-dropzone p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Preview Display */
+        .preview-wrapper {
+            display: none;
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            max-height: 320px;
+            background: #000;
+        }
+
+        .preview-wrapper.active {
+            display: block;
+        }
+
+        #imagePreview {
+            width: 100%;
+            max-height: 320px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .preview-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        .change-image-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Demo Presets */
+        .demo-presets-row {
+            margin: 16px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .demo-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            background: var(--surface-subtle);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* Action Buttons */
+        .primary-action-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
             font-size: 15px;
-            margin-top: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+            transition: all 0.2s ease;
+            margin-top: 14px;
         }
 
-        .action-btn:hover {
-            background: var(--emerald-dark);
+        .primary-action-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45);
+        }
+
+        .primary-action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .secondary-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
         }
 
         .secondary-btn {
-            width: 100%;
-            background: transparent;
-            color: var(--text-dark);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 8px;
+            background: var(--surface-subtle);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
             font-weight: 600;
+            color: var(--text);
             cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.15s ease;
         }
 
-        .awaiting-box {
-            background: var(--emerald-light);
-            border: 1px solid var(--emerald-border);
+        .secondary-btn:hover {
+            background: #e2e8f0;
+        }
+
+        /* Tips Box */
+        .clinical-tips-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-top: 16px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+        }
+
+        .clinical-tips-card b {
+            color: var(--text);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .clinical-tips-card ul {
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Result Panel Components */
+        .status-pill-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            background: var(--surface-subtle);
+            margin-bottom: 16px;
+        }
+
+        .status-dot-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .risk-badge {
+            font-size: 11.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: #e2e8f0;
+            color: var(--text-muted);
+        }
+
+        .risk-badge.benign {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        .risk-badge.warning {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .risk-badge.urgent {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        /* Primary Diagnosis Card */
+        .diagnosis-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
             padding: 20px;
-            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .diagnosis-info h3 {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .diagnosis-info .disease-name {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .gauge-container {
+            width: 72px;
+            height: 72px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .gauge-svg {
+            transform: rotate(-90deg);
+        }
+
+        .gauge-bg {
+            fill: none;
+            stroke: #e2e8f0;
+            stroke-width: 6;
+        }
+
+        .gauge-fill {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 6;
+            stroke-dasharray: 188.5;
+            stroke-dashoffset: 188.5;
+            transition: stroke-dashoffset 1s ease-out;
+            stroke-linecap: round;
+        }
+
+        .gauge-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        /* Differential Probabilities Section */
+        .prob-section {
             margin-bottom: 20px;
         }
 
-        .status-dot {
+        .prob-title {
             font-size: 12px;
-            font-weight: 700;
-            color: var(--emerald-primary);
-            letter-spacing: 0.5px;
-        }
-
-        .result-disease-name {
-            font-size: 28px;
             font-weight: 800;
-            color: var(--text-dark);
-            margin: 6px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .probability-bar-bg {
-            background: #e5e7eb;
-            height: 8px;
-            border-radius: 4px;
+        .prob-bars-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .prob-bar-item {
+            background: var(--surface-subtle);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+        }
+
+        .prob-bar-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .prob-track {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: var(--radius-full);
             overflow: hidden;
-            margin-top: 4px;
-            margin-bottom: 12px;
         }
 
-        .probability-bar-fill {
-            background: var(--emerald-primary);
+        .prob-fill {
             height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            border-radius: var(--radius-full);
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 0.8s ease;
         }
 
-        .tips-box {
-            background: #fffbeb;
-            border: 1px solid #fef3c7;
-            padding: 14px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #92400e;
+        .prob-bar-item.urgent .prob-fill {
+            background: linear-gradient(90deg, #f87171 0%, #ef4444 100%);
         }
 
-        .warning-box {
-            background: #fff5f5;
-            border: 1px solid #fed7d7;
+        .prob-bar-item.warning .prob-fill {
+            background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+        }
+
+        /* Detailed Accordion Sections */
+        .clinical-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .acc-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: var(--surface);
+        }
+
+        .acc-header {
+            padding: 12px 16px;
+            background: var(--surface-subtle);
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .acc-header:hover {
+            background: #e2e8f0;
+        }
+
+        .acc-body {
+            padding: 14px 16px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            display: none;
+        }
+
+        .acc-item.open .acc-body {
+            display: block;
+        }
+
+        .acc-body ul {
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        /* Warning Alert Card */
+        .urgent-warning-card {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-md);
             padding: 14px;
-            border-radius: 8px;
-            margin-top: 15px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .warning-icon {
+            color: #ef4444;
+            font-size: 20px;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .warning-text h4 {
             font-size: 13px;
-            color: #9b2c2c;
+            font-weight: 800;
+            color: #991b1b;
+            margin-bottom: 2px;
+        }
+
+        .warning-text p {
+            font-size: 12.5px;
+            color: #b91c1c;
+            line-height: 1.45;
+        }
+
+        /* ENCYCLOPEDIA VIEW */
+        .encyclopedia-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 38px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border);
+            font-size: 13.5px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .encyclopedia-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .disease-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .disease-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .disease-card h3 {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .disease-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        /* SCAN HISTORY VIEW */
+        .history-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .history-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+
+        .history-empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            color: var(--text-subtle);
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .history-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .history-thumb {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #000;
+            display: block;
+        }
+
+        .history-details {
+            padding: 14px;
+        }
+
+        .history-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .history-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .history-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* FIND CARE & ABCDE GUIDE */
+        .abcde-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 20px 0 32px 0;
+        }
+
+        .abcde-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .letter-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--primary);
+            color: white;
+            font-weight: 800;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .abcde-card h4 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .abcde-card p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        /* MODAL DIALOGS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--surface-subtle);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* TOAST NOTIFICATION */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: #0f172a;
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius-full);
+            font-size: 13.5px;
+            font-weight: 600;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: slideUp 0.25s ease forwards;
+            pointer-events: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            header.navbar, .scanner-mode-tabs, .camera-hud-container, .upload-dropzone,
+            .demo-presets-row, .primary-action-btn, .secondary-actions-grid, .clinical-tips-card {
+                display: none !important;
+            }
+            body, main.container, .panel-card {
+                background: white !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+            }
+            .scanner-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .preview-wrapper {
+                display: block !important;
+                max-height: 250px !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <div class="brand">
-            <div class="brand-badge">S</div>
-            SkinNova AI
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a class="brand-container" onclick="switchView('scanner')">
+            <div class="brand-icon">✚</div>
+            <div class="brand-text">
+                <h1>SkinNova AI</h1>
+                <span>Dermatology Diagnostic Lab</span>
+            </div>
+        </a>
+
+        <nav class="nav-menu">
+            <button class="nav-btn active" id="nav-scanner" onclick="switchView('scanner')">
+                <span>🔬</span> AI Scanner
+            </button>
+            <button class="nav-btn" id="nav-camera" onclick="openCameraDirectly()">
+                <span>📷</span> Live Camera
+            </button>
+            <button class="nav-btn" id="nav-encyclopedia" onclick="switchView('encyclopedia')">
+                <span>📖</span> Encyclopedia
+            </button>
+            <button class="nav-btn" id="nav-history" onclick="switchView('history')">
+                <span>🕒</span> Scan History <span class="nav-badge" id="historyCounter">0</span>
+            </button>
+            <button class="nav-btn" id="nav-triage" onclick="switchView('triage')">
+                <span>🩺</span> ABCDE Guide
+            </button>
+            <button class="nav-btn" id="nav-about" onclick="switchView('about')">
+                <span>ℹ️</span> About AI
+            </button>
+        </nav>
+
+        <div class="header-actions">
+            <button class="pwa-btn" onclick="showInstallModal()">
+                ✦ Install App
+            </button>
         </div>
-        <div class="nav-links">
-            <span>Home</span>
-            <span class="active">AI Scanner</span>
-            <span>Encyclopedia</span>
-            <span>Scan History</span>
-            <span>Find Care</span>
-            <span>About AI</span>
-        </div>
-        <button class="install-btn">✦ Install App</button>
-    </div>
+    </header>
 
-    <div class="header-tag">DERMATOLOGY AI SCANNER</div>
-    <div class="header-title">Realtime lesion screening<br>& diagnostic lab.</div>
-    <div class="header-subtitle">Align your camera over the skin lesion for live AI detection or upload a clear dermoscopy photo.</div>
+    <main class="container">
 
-    <div class="tabs">
-        <button class="tab-btn">📷 Live Realtime Scanner</button>
-        <button class="tab-btn active">📁 Upload Image File</button>
-    </div>
-
-    <div class="grid-container">
-        <!-- Step 01 -->
-        <div class="card">
-            <div class="step-label">STEP 01</div>
-            <div class="card-title">Scan lesion</div>
-
-            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleFile(event)">
+        <!-- ========================================== -->
+        <!-- VIEW 1: AI SCANNER & DIAGNOSTIC LAB       -->
+        <!-- ========================================== -->
+        <section class="view-section active" id="view-scanner">
             
-            <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('imageInput').click()">
-                <div style="font-size: 32px; color: #9ca3af; margin-bottom: 8px;">+</div>
-                <div style="font-weight: 600; font-size: 15px;">Choose an image</div>
-                <div style="color: #9ca3af; font-size: 13px;">or drag and drop it here</div>
+            <div class="hero-banner">
+                <div class="hero-title-group">
+                    <h2>Realtime Lesion Screening<br>& Diagnostic Lab.</h2>
+                    <p>Screen suspicious skin moles, lesions, and rashes with instant ResNet-18 deep learning inference and comprehensive clinical differential probabilities.</p>
+                </div>
+                <div class="model-pill">
+                    <span class="pulse-dot"></span>
+                    <span>ResNet-18 INT8 Quantized · CPU Live</span>
+                </div>
             </div>
 
-            <img id="imagePreview" class="preview-img" alt="Uploaded Lesion">
-
-            <button class="action-btn" onclick="sendToStreamlit()">Analyze Image →</button>
-
-            <div class="tips-box">
-                <b>💡 Tips for Highest AI Accuracy:</b>
-                <ul style="margin-left: 18px; margin-top: 6px;">
-                    <li>Center the mole squarely inside the target reticle.</li>
-                    <li>Use bright, diffuse lighting (avoid glare).</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Step 02 -->
-        <div class="card">
-            <div class="step-label">STEP 02</div>
-            <div class="card-title">Diagnostic summary</div>
-
-            <div class="awaiting-box" id="resultContainer">
-                <div class="status-dot">🟢 AWAITING IMAGE SCAN</div>
-                <div class="result-disease-name" id="diseaseTitle">Your result will appear here</div>
-                <div style="color: var(--text-muted); font-size: 14px;" id="confidenceText">Confidence: -</div>
+            <!-- Mode Switcher -->
+            <div class="scanner-mode-tabs">
+                <button class="mode-tab-btn active" id="tabUpload" onclick="setScannerMode('upload')">
+                    📁 Upload / Gallery
+                </button>
+                <button class="mode-tab-btn" id="tabLiveCam" onclick="setScannerMode('camera')">
+                    📷 Live Video Lens
+                </button>
+                <button class="mode-tab-btn" onclick="triggerNativeMobileCamera()">
+                    📱 Phone Camera App
+                </button>
             </div>
 
-            <div id="probSection" style="display: none;">
-                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">DIFFERENTIAL PROBABILITIES (TOP-3):</div>
-                <div id="probBars"></div>
-            </div>
+            <div class="scanner-grid">
+                
+                <!-- STEP 01: Capture & Preprocessing -->
+                <div class="panel-card">
+                    <div class="step-tag">STEP 01</div>
+                    <h3 class="panel-title">Capture or Select Lesion</h3>
 
-            <div style="margin-top: 20px;">
-                <h4 style="font-size: 15px; margin-bottom: 6px;">Description</h4>
-                <p style="color: var(--text-muted); font-size: 14px;" id="descriptionText">A screening summary will be available after lesion analysis.</p>
-            </div>
+                    <!-- Hidden Inputs -->
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelected(event)">
+                    <input type="file" id="nativeCamInput" accept="image/*" capture="environment" style="display: none;" onchange="handleFileSelected(event)">
 
-            <div id="extraDetails" style="display: none; margin-top: 15px;">
-                <h4 style="font-size: 15px; margin-bottom: 4px;">Associations & Risk Factors</h4>
-                <ul id="riskList" style="font-size: 13px; color: var(--text-muted); margin-left: 18px; margin-bottom: 15px;"></ul>
+                    <!-- LIVE CAMERA VIEWPORT (HUD) -->
+                    <div class="camera-hud-container" id="cameraHud">
+                        <video id="cameraVideo" autoplay playsinline muted></video>
+                        <div class="reticle-overlay">
+                            <div class="reticle-circle">
+                                <div class="reticle-crosshair"></div>
+                            </div>
+                            <div class="reticle-hint">Center lesion inside reticle</div>
+                        </div>
+                        <div class="camera-controls-bar">
+                            <button class="cam-tool-btn" onclick="toggleFacingMode()" title="Flip Camera">🔄</button>
+                            <button class="shutter-btn" onclick="captureCameraSnapshot()" title="Capture Photo">📸</button>
+                            <button class="cam-tool-btn" onclick="stopCameraStream()" title="Close Camera">✕</button>
+                        </div>
+                    </div>
 
-                <h4 style="font-size: 15px; margin-bottom: 4px;">General Care Instructions</h4>
-                <ul id="careList" style="font-size: 13px; color: var(--text-muted); margin-left: 18px; margin-bottom: 15px;"></ul>
+                    <!-- UPLOAD DROPZONE -->
+                    <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+                        <div class="dropzone-icon">📁</div>
+                        <h3>Choose a skin lesion photo</h3>
+                        <p>Drag and drop image here or browse files (JPG, PNG, WEBP)</p>
+                    </div>
 
-                <div class="warning-box" id="medicalBox" style="display: none;">
-                    <b>⚠️ When to seek medical attention</b>
-                    <p id="medicalText" style="margin-top: 4px;"></p>
+                    <!-- SELECTED IMAGE PREVIEW -->
+                    <div class="preview-wrapper" id="previewWrapper">
+                        <img id="imagePreview" alt="Lesion Preview">
+                        <div class="preview-badge" id="previewFileName">Selected Image</div>
+                        <button class="change-image-btn" onclick="resetImageSelection()">✕ Change</button>
+                    </div>
+
+                    <!-- QUICK DEMO PRESETS -->
+                    <div class="demo-presets-row">
+                        <div class="demo-label">⚡ Quick 1-Click Test Samples:</div>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="loadDemoSample('nevus')">🟢 Benign Mole (Nevus)</button>
+                            <button class="preset-btn" onclick="loadDemoSample('melanoma')">🔴 Suspicious (Melanoma)</button>
+                            <button class="preset-btn" onclick="loadDemoSample('keratosis')">🟡 Actinic Keratosis</button>
+                        </div>
+                    </div>
+
+                    <!-- MAIN ACTION BUTTON -->
+                    <button class="primary-action-btn" id="analyzeBtn" onclick="runAnalysis()">
+                        <span>✦ Analyze Lesion with AI</span>
+                    </button>
+
+                    <!-- CLINICAL TIPS -->
+                    <div class="clinical-tips-card">
+                        <b>💡 Imaging Recommendations for Highest Accuracy:</b>
+                        <ul>
+                            <li>Clean skin surface and center the mole squarely.</li>
+                            <li>Ensure bright, diffuse natural lighting (avoid sharp flashlight reflections).</li>
+                            <li>Keep surrounding skin free from dense hair where possible.</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <button class="secondary-btn" onclick="alert('Scan saved successfully!')">💾 Save to My Scan History</button>
-                <button class="secondary-btn" onclick="window.print()">🖨️ Print / Save Summary (PDF)</button>
+                <!-- STEP 02: Diagnostic Lab Results -->
+                <div class="panel-card" id="diagnosticLabPanel">
+                    <div class="step-tag">STEP 02</div>
+                    <h3 class="panel-title">Diagnostic Screening Summary</h3>
+
+                    <!-- Status Pill Banner -->
+                    <div class="status-pill-banner">
+                        <div class="status-dot-text" id="statusIndicator">
+                            <span class="pulse-dot" style="background: #94a3b8;"></span>
+                            <span id="statusText">AWAITING IMAGE SCAN</span>
+                        </div>
+                        <span class="risk-badge" id="riskBadge">UNASSESSED</span>
+                    </div>
+
+                    <!-- Primary Condition Name & Donut Meter -->
+                    <div class="diagnosis-card">
+                        <div class="diagnosis-info">
+                            <h3>PRIMARY PREDICTION</h3>
+                            <div class="disease-name" id="diagnosisTitle">Ready for Scan</div>
+                            <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="confidenceSubtitle">Awaiting clinical image</div>
+                        </div>
+                        <div class="gauge-container">
+                            <svg class="gauge-svg" width="72" height="72" viewBox="0 0 72 72">
+                                <circle class="gauge-bg" cx="36" cy="36" r="30"></circle>
+                                <circle class="gauge-fill" id="confidenceGauge" cx="36" cy="36" r="30"></circle>
+                            </svg>
+                            <div class="gauge-text" id="confidencePercent">0%</div>
+                        </div>
+                    </div>
+
+                    <!-- Differential Probabilities Section -->
+                    <div class="prob-section" id="differentialSection" style="display: none;">
+                        <div class="prob-title">
+                            <span>Differential Probabilities (Top-3)</span>
+                            <span>Model Certainty</span>
+                        </div>
+                        <div class="prob-bars-list" id="probBarsList"></div>
+                    </div>
+
+                    <!-- Clinical Guidance Accordions -->
+                    <div class="clinical-accordion" id="clinicalAccordions">
+                        <div class="acc-item open" id="accDescription">
+                            <div class="acc-header" onclick="toggleAccordion('accDescription')">
+                                <span>📋 Clinical Description</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="acc-body" id="descriptionBody">
+                                A clinical screening overview will be generated here once an image is analyzed.
+                            </div>
+                        </div>
+
+                        <div class="acc-item" id="accCauses">
+                            <div class="acc-header" onclick="toggleAccordion('accCauses')">
+                                <span>🧬 Risk Factors & Associations</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="acc-body" id="causesBody">
+                                Analysis will outline potential etiologies and UV exposure risk factors.
+                            </div>
+                        </div>
+
+                        <div class="acc-item" id="accCare">
+                            <div class="acc-header" onclick="toggleAccordion('accCare')">
+                                <span>🩺 General Care Instructions</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="acc-body" id="careBody">
+                                Preventative daily dermatological care instructions will display here.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Urgent Attention Card -->
+                    <div class="urgent-warning-card" id="warningCard" style="display: none;">
+                        <div class="warning-icon">⚠️</div>
+                        <div class="warning-text">
+                            <h4>When to Seek Medical Attention</h4>
+                            <p id="medicalAttentionText"></p>
+                        </div>
+                    </div>
+
+                    <!-- Action Row -->
+                    <div class="secondary-actions-grid">
+                        <button class="secondary-btn" id="saveHistoryBtn" onclick="saveCurrentScanToHistory()" disabled>
+                            💾 Save to History
+                        </button>
+                        <button class="secondary-btn" onclick="window.print()">
+                            🖨️ Print Clinical Summary
+                        </button>
+                    </div>
+
+                </div>
+
             </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: DISEASE ENCYCLOPEDIA               -->
+        <!-- ========================================== -->
+        <section class="view-section" id="view-encyclopedia">
+            <div class="encyclopedia-header">
+                <div>
+                    <h2>Dermatological Encyclopedia</h2>
+                    <p style="color: var(--text-muted); font-size: 14.5px;">Explore comprehensive clinical profiles for the seven skin conditions classified by SkinNova AI.</p>
+                </div>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="encyclopediaSearch" placeholder="Search disease, risk, or symptoms..." oninput="filterEncyclopedia()">
+                </div>
+            </div>
+
+            <div class="encyclopedia-grid" id="encyclopediaGrid">
+                <!-- Dynamically generated from clinical database -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: SCAN HISTORY                      -->
+        <!-- ========================================== -->
+        <section class="view-section" id="view-history">
+            <div class="history-controls">
+                <div>
+                    <h2>My Scan History</h2>
+                    <p style="color: var(--text-muted); font-size: 14.5px;">Locally preserved records of past lesion evaluations.</p>
+                </div>
+                <button class="secondary-btn" onclick="clearAllHistory()" style="color: #ef4444;">
+                    🗑️ Clear History
+                </button>
+            </div>
+
+            <div class="history-empty-state" id="historyEmpty">
+                <div class="icon">📋</div>
+                <h3 style="font-size: 18px; margin-bottom: 6px;">No Scans Saved Yet</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">Perform a skin scan in the AI Scanner tab and tap "Save to History".</p>
+                <button class="primary-action-btn" style="max-width: 220px; margin: 0 auto;" onclick="switchView('scanner')">
+                    Open AI Scanner
+                </button>
+            </div>
+
+            <div class="history-grid" id="historyGrid"></div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4: ABCDE TRIAGE & FIND CARE          -->
+        <!-- ========================================== -->
+        <section class="view-section" id="view-triage">
+            <h2>Melanoma ABCDE Visual Guide</h2>
+            <p style="color: var(--text-muted); font-size: 15px;">The clinical standard for evaluating atypical pigmented lesions for early melanoma detection.</p>
+
+            <div class="abcde-grid">
+                <div class="abcde-card">
+                    <div class="letter-badge">A</div>
+                    <h4>Asymmetry</h4>
+                    <p>One half of the mole or lesion does not match the shape, elevation, or outline of the opposite half.</p>
+                </div>
+                <div class="abcde-card">
+                    <div class="letter-badge">B</div>
+                    <h4>Border</h4>
+                    <p>The edges are irregular, ragged, notched, scalloped, blurred, or poorly defined against normal skin.</p>
+                </div>
+                <div class="abcde-card">
+                    <div class="letter-badge">C</div>
+                    <h4>Color</h4>
+                    <p>Color is not uniform throughout; shades of tan, brown, black, or patches of pink, red, white, or blue.</p>
+                </div>
+                <div class="abcde-card">
+                    <div class="letter-badge">D</div>
+                    <h4>Diameter</h4>
+                    <p>The spot is larger than 6 millimeters across (roughly the size of a standard pencil eraser), though melanomas can be smaller.</p>
+                </div>
+                <div class="abcde-card">
+                    <div class="letter-badge">E</div>
+                    <h4>Evolving</h4>
+                    <p>The mole is noticeably changing in size, shape, surface texture, elevation, or symptomatically bleeding or itching.</p>
+                </div>
+            </div>
+
+            <div class="panel-card" style="margin-top: 24px;">
+                <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">Finding Qualified Clinical Care</h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">
+                    SkinNova AI is an adjunct educational screening tool, not a diagnostic medical device. If you observe any of the ABCDE criteria, consult a certified dermatologist:
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <a class="secondary-btn" href="https://www.aad.org/find-a-derm" target="_blank" rel="noopener" style="text-decoration: none;">
+                        🌐 American Academy of Dermatology (AAD) Finder ↗
+                    </a>
+                    <a class="secondary-btn" href="https://www.skincancer.org/" target="_blank" rel="noopener" style="text-decoration: none;">
+                        🌐 Skin Cancer Foundation Guidance ↗
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5: ABOUT AI & SPECIFICATIONS         -->
+        <!-- ========================================== -->
+        <section class="view-section" id="view-about">
+            <h2>About the SkinNova AI System</h2>
+            <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 24px;">Technical architecture, machine learning pipeline, and algorithmic safeguards.</p>
+
+            <div class="panel-card" style="margin-bottom: 20px;">
+                <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 10px;">🧠 Deep Neural Network Architecture</h3>
+                <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6;">
+                    The system employs a <b>ResNet-18 (Residual Network)</b> convolutional neural architecture fine-tuned specifically on dermatoscopic skin lesion datasets. Input images are converted to 224×224 normalized RGB tensors and passed through 18 convolutional layers with identity skip-connections.
+                </p>
+                <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <span class="model-pill">Layer Quantization: INT8 Dynamic</span>
+                    <span class="model-pill">Latency: ~250ms CPU</span>
+                    <span class="model-pill">Classes: 7 Distinct Pathologies</span>
+                </div>
+            </div>
+
+            <div class="urgent-warning-card">
+                <div class="warning-icon">⚖️</div>
+                <div class="warning-text">
+                    <h4>Clinical Disclaimer</h4>
+                    <p>SkinNova AI is provided solely for educational, research, and self-screening awareness purposes. It does not provide medical diagnoses, treatment plans, or prescriptions. Always seek the advice of a qualified dermatologist or licensed medical physician.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- INSTALL PWA MODAL -->
+    <div class="modal-overlay" id="installModal" onclick="if(event.target===this) closeInstallModal()">
+        <div class="modal-card">
+            <button class="modal-close-btn" onclick="closeInstallModal()">✕</button>
+            <div style="font-size: 36px; margin-bottom: 10px;">📱</div>
+            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Install SkinNova AI App</h3>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;">
+                Add SkinNova AI to your phone or desktop home screen for instant camera access and fast offline evaluations:
+            </p>
+            <div style="background: var(--surface-subtle); border-radius: var(--radius-md); padding: 14px; font-size: 13.5px; margin-bottom: 18px;">
+                <b>For iPhone / iPad (Safari):</b><br>
+                1. Tap the <b>Share</b> icon at the bottom of the screen.<br>
+                2. Scroll down and tap <b>Add to Home Screen</b>.<br><br>
+                <b>For Android (Chrome):</b><br>
+                1. Tap the three dots (<b>⋮</b>) menu.<br>
+                2. Tap <b>Install app</b> or <b>Add to Home Screen</b>.
+            </div>
+            <button class="primary-action-btn" id="nativePwaInstallBtn" onclick="promptNativeInstall()" style="display: none;">
+                Install Now
+            </button>
         </div>
     </div>
 
-    <script>
-        let base64Image = "";
-        let selectedFile = null;
+    <!-- TOAST NOTIFICATIONS -->
+    <div class="toast-container" id="toastContainer"></div>
 
-        function handleFile(event) {
-            const file = event.target.files[0];
-            if (file) {
-                selectedFile = file;
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    base64Image = e.target.result;
-                    const img = document.getElementById('imagePreview');
-                    img.src = base64Image;
-                    img.style.display = 'block';
-                    document.getElementById('dropzone').style.display = 'none';
-                };
-                reader.readAsDataURL(file);
+    <!-- CANVAS FOR CAMERA CAPTURE -->
+    <canvas id="cameraCanvas" style="display: none;"></canvas>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT CONTROLLERS & SERVICES         -->
+    <!-- ========================================== -->
+    <script>
+        // State variables
+        let selectedFileOrBlob = null;
+        let lastAnalysisResult = null;
+        let cameraStream = null;
+        let currentFacingMode = "environment"; // default to rear camera on mobile
+        let deferredPrompt = null;
+
+        // Clinical knowledge base fallback (matches backend)
+        const CLINICAL_DATA = {
+            "Nevus": {
+                name: "Nevus (Common Mole)",
+                risk_level: "Low Risk (Benign)",
+                risk_category: "benign",
+                badge_color: "#10b981",
+                description: "A common benign growth of melanocytes. Moles typically appear during childhood and adolescence.",
+                causes: ["Genetic inheritance", "Melanocyte clustering", "Sun exposure during youth"],
+                general_care: ["Apply SPF 30+ daily", "Perform regular ABCDE self-checks", "Avoid scratching or friction"],
+                medical_attention: "Examine if it displays asymmetry, color shifts, irregular borders, or bleeding."
+            },
+            "Melanoma, NOS": {
+                name: "Melanoma (Malignant)",
+                risk_level: "Critical Risk (Malignant)",
+                risk_category: "urgent",
+                badge_color: "#ef4444",
+                description: "An aggressive malignancy of pigment-producing melanocytes capable of rapid metastasis if untreated.",
+                causes: ["Intense and blistering UV burns", "Tanning bed radiation", "Genetic atypical mole syndrome"],
+                general_care: ["Strict sun protection", "Avoid all artificial UV lamps", "Monthly full-body skin audits"],
+                medical_attention: "URGENT: Requires prompt dermoscopic examination and urgent biopsy by a dermatologist or oncologist."
+            },
+            "Basal cell carcinoma": {
+                name: "Basal Cell Carcinoma (BCC)",
+                risk_level: "High Risk (Malignant)",
+                risk_category: "urgent",
+                badge_color: "#f97316",
+                description: "The most frequent form of skin cancer. Usually slow-growing but locally invasive into tissue.",
+                causes: ["Chronic cumulative lifetime sun exposure", "Fair phototype", "Immunosuppression"],
+                general_care: ["High-SPF broad-spectrum sunblock", "Wear wide-brimmed protective hats", "Report non-healing sores"],
+                medical_attention: "A translucent bump or bleeding sore failing to heal after 3 weeks needs clinical excision."
+            },
+            "Squamous cell carcinoma, NOS": {
+                name: "Squamous Cell Carcinoma (SCC)",
+                risk_level: "High Risk (Malignant)",
+                risk_category: "urgent",
+                badge_color: "#f97316",
+                description: "Skin cancer originating in epidermal keratinocytes, presenting as rough, persistent, crusted lesions.",
+                causes: ["Cumulative lifetime UV exposure", "Pre-existing untreated actinic keratoses", "Radiation"],
+                general_care: ["Diligent sun avoidance", "Keep scaly patches moisturized", "Routine dermatologic monitoring"],
+                medical_attention: "Prompt biopsy and excision recommended for any firm red nodule or persistent ulceration."
+            },
+            "Solar or actinic keratosis": {
+                name: "Solar / Actinic Keratosis",
+                risk_level: "Moderate Risk (Precancerous)",
+                risk_category: "warning",
+                badge_color: "#f59e0b",
+                description: "Rough, sandpaper-textured precancerous patch on sun-exposed areas that can progress to SCC.",
+                causes: ["Cumulative decades of solar damage", "Repeated severe sunburns", "Indoor tanning"],
+                general_care: ["Daily broad-spectrum SPF 50+", "Protective sun hats", "Topical emollients"],
+                medical_attention: "Dermatologic assessment is advised to treat with cryotherapy or topical agents before progression."
+            },
+            "Pigmented benign keratosis": {
+                name: "Pigmented Benign Keratosis",
+                risk_level: "Low Risk (Benign)",
+                risk_category: "benign",
+                badge_color: "#10b981",
+                description: "A benign seborrheic keratosis or solar lentigo with a waxy, 'stuck-on' appearance.",
+                causes: ["Natural skin aging process", "Genetic predisposition", "Chronic sun exposure"],
+                general_care: ["Gentle moisturizing", "Avoid picking to prevent infection", "Sun protection"],
+                medical_attention: "Benign, but consult a dermatologist if it bleeds, rapidly darkens, or mimics melanoma."
+            },
+            "Dermatofibroma": {
+                name: "Dermatofibroma",
+                risk_level: "Low Risk (Benign)",
+                risk_category: "benign",
+                badge_color: "#10b981",
+                description: "A firm, harmless fibrous nodule, often on the lower legs, displaying a dimple sign when pinched.",
+                causes: ["Reaction to minor trauma", "Insect bites", "Shaving nicks"],
+                general_care: ["Leave undisturbed", "Protect from harsh shaving irritation", "Periodic observation"],
+                medical_attention: "Seek evaluation if it becomes significantly painful, bleeds repeatedly, or changes."
+            }
+        };
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", () => {
+            initDropzone();
+            renderEncyclopedia();
+            updateHistoryCounter();
+            renderHistoryGrid();
+
+            // PWA install prompt handler
+            window.addEventListener("beforeinstallprompt", (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                const pwaBtn = document.getElementById("nativePwaInstallBtn");
+                if (pwaBtn) pwaBtn.style.display = "block";
+            });
+        });
+
+        // ==========================================
+        // NAVIGATION & TAB SWITCHING
+        // ==========================================
+        function switchView(viewName) {
+            document.querySelectorAll(".view-section").forEach(sec => sec.classList.remove("active"));
+            document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+
+            const targetSection = document.getElementById(`view-${viewName}`);
+            const targetNav = document.getElementById(`nav-${viewName}`);
+            
+            if (targetSection) targetSection.classList.add("active");
+            if (targetNav) targetNav.classList.add("active");
+
+            // Stop live camera if navigating away from scanner
+            if (viewName !== "scanner") {
+                stopCameraStream();
+            }
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function openCameraDirectly() {
+            switchView("scanner");
+            setScannerMode("camera");
+        }
+
+        // ==========================================
+        // SCANNER MODES (UPLOAD vs CAMERA)
+        // ==========================================
+        function setScannerMode(mode) {
+            const tabUpload = document.getElementById("tabUpload");
+            const tabLiveCam = document.getElementById("tabLiveCam");
+            const cameraHud = document.getElementById("cameraHud");
+            const dropzone = document.getElementById("dropzone");
+
+            if (mode === "camera") {
+                tabLiveCam.classList.add("active");
+                tabUpload.classList.remove("active");
+                cameraHud.classList.add("active");
+                dropzone.style.display = "none";
+                startCameraStream();
+            } else {
+                tabUpload.classList.add("active");
+                tabLiveCam.classList.remove("active");
+                cameraHud.classList.remove("active");
+                dropzone.style.display = "block";
+                stopCameraStream();
             }
         }
 
-        async function sendToStreamlit() {
-            if (!selectedFile && !base64Image) {
-                alert("Please select or upload an image first!");
+        function triggerNativeMobileCamera() {
+            stopCameraStream();
+            document.getElementById("nativeCamInput").click();
+        }
+
+        // ==========================================
+        // LIVE CAMERA ENGINE (WebRTC & Mobile)
+        // ==========================================
+        async function startCameraStream() {
+            const video = document.getElementById("cameraVideo");
+            stopCameraStream(); // Clear existing stream
+
+            try {
+                const constraints = {
+                    video: {
+                        facingMode: { ideal: currentFacingMode },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                };
+
+                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = cameraStream;
+                showToast("📷 Live camera stream active");
+            } catch (err) {
+                console.error("Camera access error:", err);
+                showToast("⚠️ Camera access denied or unavailable. Use Phone Camera App button.");
+                setScannerMode("upload");
+            }
+        }
+
+        function stopCameraStream() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            const video = document.getElementById("cameraVideo");
+            if (video) video.srcObject = null;
+        }
+
+        function toggleFacingMode() {
+            currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
+            startCameraStream();
+            showToast(`Camera switched to ${currentFacingMode === "environment" ? "Rear" : "Front"}`);
+        }
+
+        function captureCameraSnapshot() {
+            const video = document.getElementById("cameraVideo");
+            const canvas = document.getElementById("cameraCanvas");
+            if (!video || !video.videoWidth) {
+                showToast("Camera feed not ready.");
                 return;
             }
 
-            document.getElementById('diseaseTitle').innerText = "Analyzing...";
-            document.getElementById('confidenceText').innerText = "Running PyTorch AI inference...";
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Also send to Streamlit if embedded in an iframe
-            if (window.parent && window.parent !== window) {
-                window.parent.postMessage({
-                    type: "STREAMLIT_ANALYZE",
-                    image: base64Image
-                }, "*");
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    selectedFileOrBlob = blob;
+                    const previewUrl = URL.createObjectURL(blob);
+                    showPreview(previewUrl, "Live Camera Snapshot");
+                    stopCameraStream();
+                    setScannerMode("upload");
+                    showToast("✓ Snapshot captured! Click 'Analyze Lesion'");
+                }
+            }, "image/jpeg", 0.95);
+        }
+
+        // ==========================================
+        // FILE UPLOAD & DROPZONE HANDLING
+        // ==========================================
+        function initDropzone() {
+            const dropzone = document.getElementById("dropzone");
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.add("dragover");
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.remove("dragover");
+                }, false);
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) processFile(files[0]);
+            }, false);
+        }
+
+        function handleFileSelected(event) {
+            const file = event.target.files[0];
+            if (file) processFile(file);
+        }
+
+        function processFile(file) {
+            if (!file.type.startsWith("image/")) {
+                showToast("Please choose an image file (JPEG, PNG, WEBP).");
+                return;
+            }
+            selectedFileOrBlob = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                showPreview(e.target.result, file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showPreview(src, label) {
+            const img = document.getElementById("imagePreview");
+            const wrapper = document.getElementById("previewWrapper");
+            const dropzone = document.getElementById("dropzone");
+            const badge = document.getElementById("previewFileName");
+
+            img.src = src;
+            badge.innerText = label;
+            wrapper.classList.add("active");
+            dropzone.style.display = "none";
+            document.getElementById("analyzeBtn").disabled = false;
+        }
+
+        function resetImageSelection() {
+            selectedFileOrBlob = null;
+            document.getElementById("fileInput").value = "";
+            document.getElementById("nativeCamInput").value = "";
+            document.getElementById("previewWrapper").classList.remove("active");
+            document.getElementById("dropzone").style.display = "block";
+            document.getElementById("saveHistoryBtn").disabled = true;
+        }
+
+        // ==========================================
+        // QUICK DEMO PRESETS (1-Click Test Samples)
+        // ==========================================
+        function loadDemoSample(type) {
+            const canvas = document.createElement("canvas");
+            canvas.width = 250;
+            canvas.height = 250;
+            const ctx = canvas.getContext("2d");
+
+            // Base skin tone
+            ctx.fillStyle = "#e8c39e";
+            ctx.fillRect(0, 0, 250, 250);
+
+            if (type === "nevus") {
+                // Symmetrical brown mole
+                const grad = ctx.createRadialGradient(125, 125, 10, 125, 125, 55);
+                grad.addColorStop(0, "#4a2810");
+                grad.addColorStop(0.7, "#6b3f1f");
+                grad.addColorStop(1, "rgba(107, 63, 31, 0)");
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(125, 125, 55, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (type === "melanoma") {
+                // Irregular asymmetrical dark lesion
+                ctx.fillStyle = "#1e130c";
+                ctx.beginPath();
+                ctx.moveTo(110, 80);
+                ctx.bezierCurveTo(170, 70, 190, 140, 160, 170);
+                ctx.bezierCurveTo(130, 200, 70, 180, 80, 130);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = "#8b1e1e";
+                ctx.beginPath();
+                ctx.arc(145, 110, 22, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // Scaly reddish actinic keratosis
+                ctx.fillStyle = "#cf6055";
+                ctx.beginPath();
+                ctx.arc(125, 125, 45, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = "#f3dbcd";
+                for (let i = 0; i < 20; i++) {
+                    ctx.beginPath();
+                    ctx.arc(100 + Math.random() * 50, 100 + Math.random() * 50, 3 + Math.random() * 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
 
-            // Direct API call to FastAPI backend
-            try {
-                const formData = new FormData();
-                if (selectedFile) {
-                    formData.append("file", selectedFile);
-                } else if (base64Image) {
-                    const blob = await (await fetch(base64Image)).blob();
-                    formData.append("file", blob, "uploaded_lesion.jpg");
-                }
+            canvas.toBlob((blob) => {
+                selectedFileOrBlob = blob;
+                const sampleName = type === "nevus" ? "Demo: Benign Mole" : (type === "melanoma" ? "Demo: Melanoma" : "Demo: Actinic Keratosis");
+                showPreview(canvas.toDataURL("image/jpeg"), sampleName);
+                showToast(`Loaded ${sampleName}. Ready to analyze!`);
+            }, "image/jpeg", 0.95);
+        }
 
+        // ==========================================
+        // AI INFERENCE API CALL
+        // ==========================================
+        async function runAnalysis() {
+            if (!selectedFileOrBlob) {
+                showToast("Please capture or upload an image first!");
+                return;
+            }
+
+            const analyzeBtn = document.getElementById("analyzeBtn");
+            const statusText = document.getElementById("statusText");
+            const statusIndicator = document.getElementById("statusIndicator");
+            const diagnosisTitle = document.getElementById("diagnosisTitle");
+
+            analyzeBtn.disabled = true;
+            statusText.innerText = "RUNNING PYTORCH INFERENCE...";
+            diagnosisTitle.innerText = "Analyzing Lesion...";
+            statusIndicator.querySelector(".pulse-dot").style.background = "#f59e0b";
+
+            const formData = new FormData();
+            formData.append("file", selectedFileOrBlob, "lesion_scan.jpg");
+
+            try {
                 const response = await fetch("/predict", {
                     method: "POST",
                     body: formData
                 });
 
                 if (!response.ok) {
-                    throw new Error("HTTP " + response.status + ": " + response.statusText);
+                    throw new Error(`Server returned HTTP ${response.status}`);
                 }
 
-                const data = await response.json();
-                renderResult(data);
+                const result = await response.json();
+                lastAnalysisResult = result;
+                renderDiagnosticResults(result);
+                showToast("✓ Analysis complete!");
             } catch (err) {
-                console.error("API error:", err);
-                if (!(window.parent && window.parent !== window)) {
-                    document.getElementById('diseaseTitle').innerText = "Analysis Failed";
-                    document.getElementById('confidenceText').innerText = "Error: " + err.message;
-                }
+                console.error("Inference failure:", err);
+                statusText.innerText = "ANALYSIS ERROR";
+                diagnosisTitle.innerText = "Error Running Model";
+                statusIndicator.querySelector(".pulse-dot").style.background = "#ef4444";
+                showToast("Failed to connect to backend: " + err.message);
+            } finally {
+                analyzeBtn.disabled = false;
             }
         }
 
-        function renderResult(res) {
-            document.getElementById('diseaseTitle').innerText = res.prediction || res.predicted_label || "Detected Condition";
-            document.getElementById('confidenceText').innerText = "Confidence: " + res.confidence + "%";
-            document.getElementById('descriptionText').innerText = res.description || "No specific details available.";
-            
+        // ==========================================
+        // RENDER INFERENCE RESULTS TO DIAGNOSTIC LAB
+        // ==========================================
+        function renderDiagnosticResults(res) {
+            const diseaseName = res.prediction || res.predicted_label;
+            const conf = res.confidence || 0;
+            const riskCategory = res.risk_category || "benign";
+            const riskLevel = res.risk_level || (riskCategory === "urgent" ? "Critical / High Risk" : "Benign / Low Risk");
+
+            // Status Banner
+            const statusText = document.getElementById("statusText");
+            const statusIndicator = document.getElementById("statusIndicator");
+            statusText.innerText = "SCREENING COMPLETE";
+            statusIndicator.querySelector(".pulse-dot").style.background = "#10b981";
+
+            // Risk Badge
+            const riskBadge = document.getElementById("riskBadge");
+            riskBadge.className = `risk-badge ${riskCategory}`;
+            riskBadge.innerText = riskLevel;
+
+            // Title & Confidence Subtitle
+            document.getElementById("diagnosisTitle").innerText = diseaseName;
+            document.getElementById("confidenceSubtitle").innerText = `Model Certainty: ${conf}%`;
+
+            // Confidence Gauge (Circumference = 2 * PI * 30 ≈ 188.5)
+            const gauge = document.getElementById("confidenceGauge");
+            const gaugeText = document.getElementById("confidencePercent");
+            const offset = 188.5 - (188.5 * conf / 100);
+            gauge.style.strokeDashoffset = offset;
+            gaugeText.innerText = `${Math.round(conf)}%`;
+
+            if (riskCategory === "urgent") {
+                gauge.style.stroke = "var(--danger)";
+            } else if (riskCategory === "warning") {
+                gauge.style.stroke = "var(--warning)";
+            } else {
+                gauge.style.stroke = "var(--primary)";
+            }
+
+            // Differential Probabilities (Top-3)
+            const probSection = document.getElementById("differentialSection");
+            const probList = document.getElementById("probBarsList");
             if (res.top3 && res.top3.length > 0) {
-                let barsHTML = "";
-                res.top3.forEach(item => {
-                    barsHTML += `
-                        <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-top:6px;">
+                probSection.style.display = "block";
+                probList.innerHTML = res.top3.map(item => `
+                    <div class="prob-bar-item ${item.risk_category || ''}">
+                        <div class="prob-bar-header">
                             <span>${item.label}</span>
                             <span>${item.prob}%</span>
                         </div>
-                        <div class="probability-bar-bg">
-                            <div class="probability-bar-fill" style="width: ${item.prob}%"></div>
+                        <div class="prob-track">
+                            <div class="prob-fill" style="width: ${item.prob}%"></div>
                         </div>
-                    `;
-                });
-                document.getElementById('probBars').innerHTML = barsHTML;
-                document.getElementById('probSection').style.display = 'block';
+                    </div>
+                `).join("");
+            } else {
+                probSection.style.display = "none";
             }
 
+            // Detailed Accordions
+            document.getElementById("descriptionBody").innerHTML = res.description ? `<p>${res.description}</p>` : "<p>No specific clinical notes available.</p>";
+
+            const causesBody = document.getElementById("causesBody");
             if (res.causes && res.causes.length > 0) {
-                let rHtml = "";
-                res.causes.forEach(c => rHtml += `<li>${c}</li>`);
-                document.getElementById('riskList').innerHTML = rHtml;
+                causesBody.innerHTML = `<ul>${res.causes.map(c => `<li>${c}</li>`).join("")}</ul>`;
+            } else {
+                causesBody.innerHTML = "<p>Standard cellular and environmental risk factors.</p>";
             }
 
+            const careBody = document.getElementById("careBody");
             const careData = res.general_care || res.care;
             if (careData && careData.length > 0) {
-                let cHtml = "";
-                careData.forEach(cr => cHtml += `<li>${cr}</li>`);
-                document.getElementById('careList').innerHTML = cHtml;
+                careBody.innerHTML = `<ul>${careData.map(cr => `<li>${cr}</li>`).join("")}</ul>`;
+            } else {
+                careBody.innerHTML = "<p>Standard daily UV protection and moisturization.</p>";
             }
 
-            const medData = res.medical_attention || res.medical;
-            if (medData) {
-                document.getElementById('medicalText').innerText = medData;
-                document.getElementById('medicalBox').style.display = 'block';
+            // Warning Card
+            const warningCard = document.getElementById("warningCard");
+            const medicalAttention = res.medical_attention || res.medical;
+            if (medicalAttention) {
+                warningCard.style.display = "flex";
+                document.getElementById("medicalAttentionText").innerText = medicalAttention;
+            } else {
+                warningCard.style.display = "none";
             }
 
-            document.getElementById('extraDetails').style.display = 'block';
+            // Enable Save History Button
+            document.getElementById("saveHistoryBtn").disabled = false;
+
+            // Auto-scroll to results on mobile
+            if (window.innerWidth < 900) {
+                document.getElementById("diagnosticLabPanel").scrollIntoView({ behavior: "smooth" });
+            }
         }
 
-        window.addEventListener("message", function(event) {
-            if (event.data && event.data.type === "STREAMLIT_RESULT") {
-                renderResult(event.data.data);
+        function toggleAccordion(id) {
+            const item = document.getElementById(id);
+            if (item) {
+                item.classList.toggle("open");
+                const arrow = item.querySelector(".acc-header span:last-child");
+                if (arrow) arrow.innerText = item.classList.contains("open") ? "▲" : "▼";
             }
-        });
+        }
+
+        // ==========================================
+        // SCAN HISTORY (PERSISTENT LOCALSTORAGE)
+        // ==========================================
+        function saveCurrentScanToHistory() {
+            if (!lastAnalysisResult) {
+                showToast("No active scan to save.");
+                return;
+            }
+
+            const img = document.getElementById("imagePreview");
+            const historyItem = {
+                id: "scan_" + Date.now(),
+                timestamp: new Date().toLocaleString(),
+                prediction: lastAnalysisResult.prediction || lastAnalysisResult.predicted_label,
+                confidence: lastAnalysisResult.confidence,
+                risk_level: lastAnalysisResult.risk_level,
+                risk_category: lastAnalysisResult.risk_category,
+                thumbnail: img.src
+            };
+
+            let history = JSON.parse(localStorage.getItem("skinnova_history") || "[]");
+            history.unshift(historyItem);
+            localStorage.setItem("skinnova_history", JSON.stringify(history));
+
+            updateHistoryCounter();
+            renderHistoryGrid();
+            showToast("💾 Saved to My Scan History!");
+        }
+
+        function updateHistoryCounter() {
+            const history = JSON.parse(localStorage.getItem("skinnova_history") || "[]");
+            const counter = document.getElementById("historyCounter");
+            if (counter) counter.innerText = history.length;
+        }
+
+        function renderHistoryGrid() {
+            const history = JSON.parse(localStorage.getItem("skinnova_history") || "[]");
+            const grid = document.getElementById("historyGrid");
+            const emptyState = document.getElementById("historyEmpty");
+
+            if (history.length === 0) {
+                emptyState.style.display = "block";
+                grid.innerHTML = "";
+                return;
+            }
+
+            emptyState.style.display = "none";
+            grid.innerHTML = history.map(item => `
+                <div class="history-card">
+                    <img class="history-thumb" src="${item.thumbnail}" alt="Thumbnail">
+                    <div class="history-details">
+                        <div class="history-time">${item.timestamp}</div>
+                        <div class="history-title">${item.prediction}</div>
+                        <span class="risk-badge ${item.risk_category || 'benign'}">${item.confidence}% · ${item.risk_level || 'Evaluated'}</span>
+                        <div class="history-actions">
+                            <button class="secondary-btn" style="padding: 4px 10px; font-size: 12px;" onclick="deleteHistoryItem('${item.id}')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function deleteHistoryItem(id) {
+            let history = JSON.parse(localStorage.getItem("skinnova_history") || "[]");
+            history = history.filter(item => item.id !== id);
+            localStorage.setItem("skinnova_history", JSON.stringify(history));
+            updateHistoryCounter();
+            renderHistoryGrid();
+            showToast("Scan removed from history.");
+        }
+
+        function clearAllHistory() {
+            if (confirm("Are you sure you want to clear your saved scan history?")) {
+                localStorage.removeItem("skinnova_history");
+                updateHistoryCounter();
+                renderHistoryGrid();
+                showToast("All history cleared.");
+            }
+        }
+
+        // ==========================================
+        // ENCYCLOPEDIA VIEWER & FILTER
+        // ==========================================
+        function renderEncyclopedia(filter = "") {
+            const grid = document.getElementById("encyclopediaGrid");
+            const entries = Object.entries(CLINICAL_DATA);
+
+            const filtered = entries.filter(([key, d]) => {
+                const searchStr = `${key} ${d.name} ${d.description} ${d.risk_level}`.toLowerCase();
+                return searchStr.includes(filter.toLowerCase());
+            });
+
+            grid.innerHTML = filtered.map(([key, d]) => `
+                <div class="disease-card">
+                    <div>
+                        <div class="card-top">
+                            <h3>${d.name}</h3>
+                            <span class="risk-badge ${d.risk_category}">${d.risk_level}</span>
+                        </div>
+                        <p class="disease-desc">${d.description}</p>
+                        <div style="font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px;">Primary Causes:</div>
+                        <ul style="font-size: 12px; color: var(--text-muted); padding-left: 16px; margin-bottom: 12px;">
+                            ${d.causes.map(c => `<li>${c}</li>`).join("")}
+                        </ul>
+                    </div>
+                    <div style="border-top: 1px solid var(--border); padding-top: 10px; font-size: 12px; color: #b91c1c;">
+                        <b>Care:</b> ${d.medical_attention}
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function filterEncyclopedia() {
+            const query = document.getElementById("encyclopediaSearch").value;
+            renderEncyclopedia(query);
+        }
+
+        // ==========================================
+        // PWA MODAL & TOASTS
+        // ==========================================
+        function showInstallModal() {
+            document.getElementById("installModal").classList.add("active");
+        }
+
+        function closeInstallModal() {
+            document.getElementById("installModal").classList.remove("active");
+        }
+
+        function promptNativeInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(() => {
+                    deferredPrompt = null;
+                    closeInstallModal();
+                });
+            }
+        }
+
+        function showToast(message) {
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
+            toast.className = "toast";
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transition = "opacity 0.3s ease";
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html>
