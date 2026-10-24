@@ -44,6 +44,6 @@ html_path = "frontend/index.html"
 if os.path.exists(html_path):
     with open(html_path, "r", encoding="utf-8") as f:
         html_code = f.read()
-    components.html(html_code, height=920, scrolling=True)
+    components.html(html_code, height=950, scrolling=True)
 else:
     st.error("HTML file not found in frontend/index.html")

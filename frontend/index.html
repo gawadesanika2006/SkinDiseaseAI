@@ -140,6 +140,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 24px;
+            margin-bottom: 20px;
         }
 
         .step-label {
@@ -184,10 +185,24 @@
             font-weight: 600;
             cursor: pointer;
             font-size: 15px;
+            margin-top: 10px;
         }
 
         .action-btn:hover {
             background: var(--emerald-dark);
+        }
+
+        .secondary-btn {
+            width: 100%;
+            background: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
         }
 
         .awaiting-box {
@@ -237,6 +252,16 @@
             font-size: 13px;
             color: #92400e;
         }
+
+        .warning-box {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #9b2c2c;
+        }
     </style>
 </head>
 <body>
@@ -267,6 +292,7 @@
     </div>
 
     <div class="grid-container">
+        <!-- Step 01 -->
         <div class="card">
             <div class="step-label">STEP 01</div>
             <div class="card-title">Scan lesion</div>
@@ -292,6 +318,7 @@
             </div>
         </div>
 
+        <!-- Step 02 -->
         <div class="card">
             <div class="step-label">STEP 02</div>
             <div class="card-title">Diagnostic summary</div>
@@ -310,6 +337,22 @@
             <div style="margin-top: 20px;">
                 <h4 style="font-size: 15px; margin-bottom: 6px;">Description</h4>
                 <p style="color: var(--text-muted); font-size: 14px;" id="descriptionText">A screening summary will be available after lesion analysis.</p>
+            </div>
+
+            <div id="extraDetails" style="display: none; margin-top: 15px;">
+                <h4 style="font-size: 15px; margin-bottom: 4px;">Associations & Risk Factors</h4>
+                <ul id="riskList" style="font-size: 13px; color: var(--text-muted); margin-left: 18px; margin-bottom: 15px;"></ul>
+
+                <h4 style="font-size: 15px; margin-bottom: 4px;">General Care Instructions</h4>
+                <ul id="careList" style="font-size: 13px; color: var(--text-muted); margin-left: 18px; margin-bottom: 15px;"></ul>
+
+                <div class="warning-box" id="medicalBox" style="display: none;">
+                    <b>⚠️ When to seek medical attention</b>
+                    <p id="medicalText" style="margin-top: 4px;"></p>
+                </div>
+
+                <button class="secondary-btn" onclick="alert('Scan saved successfully!')">💾 Save to My Scan History</button>
+                <button class="secondary-btn" onclick="window.print()">🖨️ Print / Save Summary (PDF)</button>
             </div>
         </div>
     </div>
@@ -355,7 +398,7 @@
                 let barsHTML = "";
                 res.top3.forEach(item => {
                     barsHTML += `
-                        <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600;">
+                        <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-top:6px;">
                             <span>${item.label}</span>
                             <span>${item.prob}%</span>
                         </div>
@@ -366,6 +409,25 @@
                 });
                 document.getElementById('probBars').innerHTML = barsHTML;
                 document.getElementById('probSection').style.display = 'block';
+
+                if (res.causes && res.causes.length > 0) {
+                    let rHtml = "";
+                    res.causes.forEach(c => rHtml += `<li>${c}</li>`);
+                    document.getElementById('riskList').innerHTML = rHtml;
+                }
+
+                if (res.care && res.care.length > 0) {
+                    let cHtml = "";
+                    res.care.forEach(cr => cHtml += `<li>${cr}</li>`);
+                    document.getElementById('careList').innerHTML = cHtml;
+                }
+
+                if (res.medical) {
+                    document.getElementById('medicalText').innerText = res.medical;
+                    document.getElementById('medicalBox').style.display = 'block';
+                }
+
+                document.getElementById('extraDetails').style.display = 'block';
             }
         });
     </script>
