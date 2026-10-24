@@ -3,155 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkinNova AI | Smart Skin Analysis</title>
+    <title>Dermalens | AI Scanner</title>
     <style>
-        body {
-            background-color: #0e1117;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        :root {
+            --bg-main: #f8faf9;
+            --emerald-dark: #064e3b;
+            --emerald-primary: #065f46;
+            --emerald-light: #f0fdf4;
+            --emerald-border: #bbf7d0;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            padding: 24px 40px;
+        }
+
+        /* Top Navigation */
+        .navbar {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            min-height: 100vh;
+            margin-bottom: 24px;
         }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background: #161b22;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            text-align: center;
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--emerald-dark);
         }
-        h2 {
-            color: #58a6ff;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #8b949e;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-        .upload-box {
-            border: 2px dashed #30363d;
-            padding: 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: border-color 0.3s;
-            margin-bottom: 20px;
-            background: #0d1117;
-        }
-        .upload-box:hover {
-            border-color: #58a6ff;
-        }
-        input[type="file"] {
-            display: none;
-        }
-        .upload-btn {
-            background-color: #238636;
+
+        .brand-badge {
+            background: var(--emerald-primary);
             color: white;
-            padding: 10px 20px;
             border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .nav-links .active {
+            color: var(--emerald-primary);
+            font-weight: 600;
+            background: #e6f4ea;
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .install-btn {
+            background: var(--emerald-primary);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            display: inline-block;
-            font-weight: bold;
-            margin-top: 10px;
         }
-        .upload-btn:hover {
-            background-color: #2ea043;
+
+        /* Hero Header */
+        .header-tag {
+            color: var(--emerald-primary);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
         }
-        #preview-container {
-            margin-top: 20px;
-            display: none;
+
+        .header-title {
+            font-size: 38px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            line-height: 1.1;
         }
-        #preview-img {
-            max-width: 100%;
-            max-height: 250px;
+
+        .header-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
             border-radius: 8px;
-            border: 1px solid #30363d;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
         }
-        .analyze-btn {
-            background-color: #1f6feb;
+
+        .tab-btn.active {
+            background: #fdf6e2;
+            border-color: #f59e0b;
+        }
+
+        /* Two Column Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .step-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 4px;
+            margin-bottom: 20px;
+        }
+
+        /* Upload Area */
+        .upload-dropzone {
+            border: 2px dashed #d1d5db;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 220px;
+            border-radius: 8px;
+            display: none;
+            margin: 0 auto 16px auto;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: var(--emerald-primary);
             color: white;
             border: none;
             padding: 12px;
-            width: 100%;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            display: none;
-        }
-        .analyze-btn:hover {
-            background-color: #388bfd;
-        }
-        #result-box {
-            margin-top: 25px;
-            text-align: left;
-            background: #0d1117;
-            padding: 15px;
             border-radius: 8px;
-            border: 1px solid #30363d;
-            display: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .action-btn:hover {
+            background: var(--emerald-dark);
+        }
+
+        /* Analysis Result Panel */
+        .awaiting-box {
+            background: var(--emerald-light);
+            border: 1px solid var(--emerald-border);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--emerald-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .result-disease-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin: 6px 0;
+        }
+
+        .probability-bar-bg {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+
+        .probability-bar-fill {
+            background: var(--emerald-primary);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .tips-box {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #92400e;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>✚ SkinNova AI</h2>
-        <p>Understand your skin better using Digital Image Processing and Deep Learning.</p>
+    <!-- Header Navbar -->
+    <div class="navbar">
+        <div class="brand">
+            <div class="brand-badge">D</div>
+            dermalens
+        </div>
+        <div class="nav-links">
+            <span>Home</span>
+            <span class="active">AI Scanner</span>
+            <span>Encyclopedia</span>
+            <span>Scan History</span>
+            <span>Find Care</span>
+            <span>About AI</span>
+        </div>
+        <button class="install-btn">✦ Install App</button>
+    </div>
 
-        <div class="upload-box" onclick="document.getElementById('file-input').click()">
-            <p>📁 Drag & drop skin image here, or click to browse</p>
-            <label class="upload-btn">Choose Image</label>
-            <input type="file" id="file-input" accept="image/*" onchange="previewImage(event)">
+    <!-- Main Title -->
+    <div class="header-tag">DERMATOLOGY AI SCANNER</div>
+    <div class="header-title">Realtime lesion screening<br>& diagnostic lab.</div>
+    <div class="header-subtitle">Align your camera over the skin lesion for live AI detection or upload a clear dermoscopy photo.</div>
+
+    <!-- Toggle Tabs -->
+    <div class="tabs">
+        <button class="tab-btn">📷 Live Realtime Scanner</button>
+        <button class="tab-btn active">📁 Upload Image File</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid-container">
+        <!-- Step 01 -->
+        <div class="card">
+            <div class="step-label">STEP 01</div>
+            <div class="card-title">Scan lesion</div>
+
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleFile(event)">
+            
+            <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('imageInput').click()">
+                <div style="font-size: 32px; color: #9ca3af; margin-bottom: 8px;">+</div>
+                <div style="font-weight: 600; font-size: 15px;">Choose an image</div>
+                <div style="color: #9ca3af; font-size: 13px;">or drag and drop it here</div>
+            </div>
+
+            <img id="imagePreview" class="preview-img" alt="Uploaded Lesion">
+
+            <button class="action-btn" onclick="sendToStreamlit()">Analyze Image →</button>
+
+            <div class="tips-box">
+                <b>💡 Tips for Highest AI Accuracy:</b>
+                <ul style="margin-left: 18px; margin-top: 6px;">
+                    <li>Center the mole squarely inside the target reticle.</li>
+                    <li>Use bright, diffuse lighting (avoid glare).</li>
+                </ul>
+            </div>
         </div>
 
-        <div id="preview-container">
-            <img id="preview-img" src="" alt="Selected Preview">
-            <br>
-            <button class="analyze-btn" id="analyze-btn" onclick="analyzeImage()">✦ Analyze Image</button>
-        </div>
+        <!-- Step 02 -->
+        <div class="card">
+            <div class="step-label">STEP 02</div>
+            <div class="card-title">Diagnostic summary</div>
 
-        <div id="result-box">
-            <h3 style="color: #58a6ff; margin-top: 0;">📊 Analysis Result</h3>
-            <p id="result-text">Processing...</p>
+            <div class="awaiting-box" id="resultContainer">
+                <div class="status-dot">🟢 AWAITING IMAGE SCAN</div>
+                <div class="result-disease-name" id="diseaseTitle">Your result will appear here</div>
+                <div style="color: var(--text-muted); font-size: 14px;" id="confidenceText">Confidence: -</div>
+            </div>
+
+            <div id="probSection" style="display: none;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">DIFFERENTIAL PROBABILITIES (TOP-3):</div>
+                <div id="probBars"></div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h4 style="font-size: 15px; margin-bottom: 6px;">Description</h4>
+                <p style="color: var(--text-muted); font-size: 14px;" id="descriptionText">A screening summary will be available after lesion analysis.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        let selectedFile = null;
+        let base64Image = "";
 
-        function previewImage(event) {
+        function handleFile(event) {
             const file = event.target.files[0];
             if (file) {
-                selectedFile = file;
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('preview-img').src = e.target.result;
-                    document.getElementById('preview-container').style.display = 'block';
-                    document.getElementById('analyze-btn').style.display = 'block';
-                    document.getElementById('result-box').style.display = 'none';
-                }
+                    base64Image = e.target.result;
+                    const img = document.getElementById('imagePreview');
+                    img.src = base64Image;
+                    img.style.display = 'block';
+                    document.getElementById('dropzone').style.display = 'none';
+                };
                 reader.readAsDataURL(file);
             }
         }
 
-        function analyzeImage() {
-            const resultBox = document.getElementById('result-box');
-            const resultText = document.getElementById('result-text');
-            resultBox.style.display = 'block';
-            resultText.innerHTML = "<b>AI is analyzing your skin image...</b><br>Please ensure connection to model backend.";
+        function sendToStreamlit() {
+            if (!base64Image) {
+                alert("Please select or upload an image first!");
+                return;
+            }
+            // Send base64 payload to Streamlit backend via window parent
+            window.parent.postMessage({
+                type: "STREAMLIT_ANALYZE",
+                image: base64Image
+            }, "*");
             
-            // Simulation or direct integration can be wired here
-            setTimeout(() => {
-                resultText.innerHTML = "<b>Prediction:</b> Sample Analysis Completed.<br><i>Note: Connect via Streamlit python handlers for live PyTorch inference.</i>";
-            }, 1500);
+            document.getElementById('diseaseTitle').innerText = "Analyzing...";
         }
+
+        // Listen for AI Response from Streamlit
+        window.addEventListener("message", function(event) {
+            if (event.data.type === "STREAMLIT_RESULT") {
+                const res = event.data.data;
+                document.getElementById('diseaseTitle').innerText = res.predicted_label;
+                document.getElementById('confidenceText').innerText = "Confidence: " + res.confidence + "%";
+                document.getElementById('descriptionText').innerText = res.description || "No specific details available.";
+                
+                let barsHTML = "";
+                res.top3.forEach(item => {
+                    barsHTML += `
+                        <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600;">
+                            <span>${item.label}</span>
+                            <span>${item.prob}%</span>
+                        </div>
+                        <div class="probability-bar-bg">
+                            <div class="probability-bar-fill" style="width: ${item.prob}%"></div>
+                        </div>
+                    `;
+                });
+                document.getElementById('probBars').innerHTML = barsHTML;
+                document.getElementById('probSection').style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>
