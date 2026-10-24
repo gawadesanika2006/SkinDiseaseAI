@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dermalens | AI Scanner</title>
+    <title>SkinNova AI | AI Scanner</title>
     <style>
         :root {
             --bg-main: #f8faf9;
@@ -30,7 +30,6 @@
             padding: 24px 40px;
         }
 
-        /* Top Navigation */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -85,7 +84,6 @@
             cursor: pointer;
         }
 
-        /* Hero Header */
         .header-tag {
             color: var(--emerald-primary);
             font-size: 11px;
@@ -109,7 +107,6 @@
             margin-bottom: 24px;
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
             gap: 12px;
@@ -132,7 +129,6 @@
             border-color: #f59e0b;
         }
 
-        /* Two Column Grid */
         .grid-container {
             display: grid;
             grid-template-columns: 1fr 1.3fr;
@@ -160,7 +156,6 @@
             margin-bottom: 20px;
         }
 
-        /* Upload Area */
         .upload-dropzone {
             border: 2px dashed #d1d5db;
             background: #fafafa;
@@ -195,7 +190,6 @@
             background: var(--emerald-dark);
         }
 
-        /* Analysis Result Panel */
         .awaiting-box {
             background: var(--emerald-light);
             border: 1px solid var(--emerald-border);
@@ -247,11 +241,10 @@
 </head>
 <body>
 
-    <!-- Header Navbar -->
     <div class="navbar">
         <div class="brand">
-            <div class="brand-badge">D</div>
-            dermalens
+            <div class="brand-badge">S</div>
+            SkinNova AI
         </div>
         <div class="nav-links">
             <span>Home</span>
@@ -264,20 +257,16 @@
         <button class="install-btn">✦ Install App</button>
     </div>
 
-    <!-- Main Title -->
     <div class="header-tag">DERMATOLOGY AI SCANNER</div>
     <div class="header-title">Realtime lesion screening<br>& diagnostic lab.</div>
     <div class="header-subtitle">Align your camera over the skin lesion for live AI detection or upload a clear dermoscopy photo.</div>
 
-    <!-- Toggle Tabs -->
     <div class="tabs">
         <button class="tab-btn">📷 Live Realtime Scanner</button>
         <button class="tab-btn active">📁 Upload Image File</button>
     </div>
 
-    <!-- Grid -->
     <div class="grid-container">
-        <!-- Step 01 -->
         <div class="card">
             <div class="step-label">STEP 01</div>
             <div class="card-title">Scan lesion</div>
@@ -303,7 +292,6 @@
             </div>
         </div>
 
-        <!-- Step 02 -->
         <div class="card">
             <div class="step-label">STEP 02</div>
             <div class="card-title">Diagnostic summary</div>
@@ -349,7 +337,6 @@
                 alert("Please select or upload an image first!");
                 return;
             }
-            // Send base64 payload to Streamlit backend via window parent
             window.parent.postMessage({
                 type: "STREAMLIT_ANALYZE",
                 image: base64Image
@@ -358,7 +345,6 @@
             document.getElementById('diseaseTitle').innerText = "Analyzing...";
         }
 
-        // Listen for AI Response from Streamlit
         window.addEventListener("message", function(event) {
             if (event.data.type === "STREAMLIT_RESULT") {
                 const res = event.data.data;

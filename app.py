@@ -13,7 +13,7 @@ from models.skin_model import create_model
 from models.label_map import LABEL_MAP
 from preprocessing.transforms import image_transforms
 
-st.set_page_config(page_title="Dermalens | AI Scanner", page_icon="✚", layout="wide")
+st.set_page_config(page_title="SkinNova AI | AI Scanner", page_icon="✚", layout="wide")
 
 @st.cache_resource
 def load_ai_model():
@@ -32,7 +32,6 @@ def load_ai_model():
 model = load_ai_model()
 reverse_label_map = {value: key for key, value in LABEL_MAP.items()}
 
-# MongoDB Connection
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 try:
     client = MongoClient(MONGO_URI)
@@ -41,7 +40,6 @@ try:
 except Exception:
     disease_collection = None
 
-# Render HTML file
 html_path = "frontend/index.html"
 if os.path.exists(html_path):
     with open(html_path, "r", encoding="utf-8") as f:
