@@ -11,93 +11,93 @@ from models.label_map import LABEL_MAP
 from preprocessing.transforms import image_transforms
 
 # Page Configuration
-st.set_page_config(page_title="SkinNova AI | Smart Skin Analysis", page_icon="✚", layout="centered")
+st.set_page_config(page_title="Dermalens | AI Scanner", page_icon="✚", layout="wide")
 
-# Exact Custom CSS to match your original HTML/CSS frontend design
+# Custom CSS matching Dermalens Professional Light/Mint Design
 st.markdown("""
     <style>
-    /* Global Dark Theme */
     .stApp {
-        background-color: #0e1117;
-        color: #ffffff;
+        background-color: #f8faf9;
+        color: #1f2937;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
-    /* Center Container Box */
-    .block-container {
-        max-width: 650px;
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-        background: #161b22;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        margin-top: 40px;
-        border: 1px solid #30363d;
+    /* Top Navbar styling */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 30px;
     }
-
-    h1, h2, h3 {
-        color: #58a6ff !important;
-        text-align: center;
+    .logo {
+        font-weight: bold;
+        font-size: 20px;
+        color: #064e3b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
     
-    p {
-        color: #8b949e;
-        text-align: center;
+    /* Main Header */
+    .main-header {
+        font-size: 34px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 5px;
+    }
+    .sub-header {
+        color: #6b7280;
         font-size: 15px;
+        margin-bottom: 25px;
     }
 
-    /* Success box */
-    .element-container div.stSuccess {
-        background-color: #0d1117;
-        border: 1px solid #238636;
-        color: #3fb950;
-        text-align: center;
-        border-radius: 8px;
-    }
-
-    /* Upload section styling */
-    div[data-testid="stFileUploader"] {
-        background-color: #0d1117;
-        border: 2px dashed #30363d;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-    }
-    div[data-testid="stFileUploader"]:hover {
-        border-color: #58a6ff;
-    }
-
-    /* Analyze Button styling */
+    /* Buttons */
     .stButton>button {
         width: 100%;
-        background-color: #1f6feb;
+        background-color: #065f46;
         color: white;
-        font-weight: bold;
+        font-weight: 600;
         border-radius: 6px;
-        padding: 12px;
+        padding: 10px;
         border: none;
-        font-size: 16px;
         cursor: pointer;
     }
     .stButton>button:hover {
-        background-color: #388bfd;
+        background-color: #047857;
     }
 
-    /* Result Box Styling */
-    .result-card {
-        background: #0d1117;
-        padding: 20px;
+    /* Metrics & Results */
+    .metric-container {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        padding: 15px;
         border-radius: 8px;
-        border: 1px solid #30363d;
-        margin-top: 20px;
+        margin-bottom: 15px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# App Header (Exact match to your frontend title & description)
-st.markdown("## ✚ SkinNova AI")
-st.markdown("Understand your skin better using Digital Image Processing and Deep Learning techniques.")
-st.success("🟢 AI System Ready (1GB RAM Optimized)")
+# Top Navbar Simulation
+st.markdown("""
+    <div class="navbar">
+        <div class="logo">
+            <span style="background: #065f46; color: white; padding: 4px 8px; border-radius: 4px;">d</span> dermalens
+        </div>
+        <div style="color: #4b5563; font-size: 14px; display: flex; gap: 20px;">
+            <span>Home</span>
+            <span style="color: #065f46; font-weight: bold;">AI Scanner</span>
+            <span>Encyclopedia</span>
+            <span>Scan History</span>
+            <span>Find Care</span>
+            <span>About AI</span>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="main-header">Realtime lesion screening & diagnostic lab.</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">Align your camera over the skin lesion for live AI detection or upload a clear dermoscopy photo.</div>', unsafe_allow_html=True)
 
 @st.cache_resource
 def load_ai_model():
@@ -127,30 +127,46 @@ try:
 except Exception as e:
     disease_collection = None
 
-st.markdown("---")
-st.markdown("### Upload Skin Image")
-st.markdown("Select a clear image from your gallery or capture using your camera.")
+# Two Column Layout (Step 01 & Step 02) matching Dermalens
+col1, col2 = st.columns(2, gap="large")
 
-# File Uploader
-uploaded_file = st.file_uploader("", type=["jpg", "jpeg", "png"])
-
-if uploaded_file is not None:
-    image = Image.open(uploaded_file).convert("RGB")
+with col1:
+    st.markdown("### STEP 01")
+    st.markdown("#### Scan lesion")
+    st.markdown("---")
     
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+    uploaded_file = st.file_uploader("Upload Image File", type=["jpg", "jpeg", "png"])
+    
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file).convert("RGB")
         st.image(image, caption="Selected Skin Image", use_column_width=True)
     
-    if st.button("✦ Analyze Image"):
+    analysis_clicked = st.button("✦ Analyze Image")
+    
+    st.markdown("---")
+    st.markdown("**Tips for Highest AI Accuracy:**")
+    st.markdown("- Center the mole squarely inside the target reticle.")
+    st.markdown("- Use bright, diffuse lighting (avoid direct camera flash glare).")
+    st.markdown("- Keep surrounding skin free from shadows or hair where possible.")
+
+with col2:
+    st.markdown("### STEP 02")
+    st.markdown("#### Diagnostic summary")
+    st.markdown("---")
+    
+    if uploaded_file is not None and analysis_clicked:
         with st.spinner("AI is analyzing your skin image..."):
             image_tensor = image_transforms(image).unsqueeze(0)
             with torch.no_grad():
                 output = model(image_tensor)
                 probabilities = torch.softmax(output, dim=1)
-                confidence, predicted_class = torch.max(probabilities, 1)
+                
+                # Get top-3 predictions
+                top3_prob, top3_indices = torch.topk(probabilities, min(3, probabilities.size(1)))
             
-            predicted_label = reverse_label_map[predicted_class.item()]
-            confidence_percentage = round(confidence.item() * 100, 2)
+            predicted_class = top3_indices[0][0].item()
+            predicted_label = reverse_label_map[predicted_class]
+            confidence_percentage = round(top3_prob[0][0].item() * 100, 2)
             
             disease_info = None
             if disease_collection is not None:
@@ -159,23 +175,51 @@ if uploaded_file is not None:
                 except:
                     pass
             
-            st.markdown("---")
-            st.markdown("### 📊 Analysis Result")
-            st.metric(label="Prediction", value=predicted_label)
-            st.metric(label="Confidence Score", value=f"{confidence_percentage}%")
+            st.markdown(f"""
+                <div class="metric-container">
+                    <span style="color: #047857; font-size: 12px; font-weight: bold;">SCREENING COMPLETE</span>
+                    <h2 style="color: #065f46; margin: 5px 0;">{predicted_label}</h2>
+                    <p style="margin: 0; color: #374151;">Confidence: <b>{confidence_percentage}%</b></p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("**DIFFERENTIAL PROBABILITIES (TOP-3):**")
+            for i in range(top3_prob.size(1)):
+                idx = top3_indices[0][i].item()
+                lbl = reverse_label_map[idx]
+                prob = round(top3_prob[0][i].item() * 100, 2)
+                st.markdown(f"- **{lbl}**: {prob}%")
+                st.progress(int(prob))
             
             if disease_info:
-                st.markdown(f"**Description:** {disease_info.get('description', '')}")
+                st.markdown("---")
+                st.markdown("**Description:**")
+                st.markdown(disease_info.get('description', 'No description available.'))
+                
                 causes = disease_info.get('causes', [])
                 if causes:
-                    st.markdown("**Causes / Associations:**")
+                    st.markdown("**Associations & Risk Factors:**")
                     for c in causes:
                         st.markdown(f"- {c}")
+                
                 care = disease_info.get('general_care', [])
                 if care:
-                    st.markdown("**General Care:**")
+                    st.markdown("**General Care Instructions:**")
                     for cr in care:
                         st.markdown(f"- {cr}")
-                st.markdown(f"**Medical Attention:** {disease_info.get('medical_attention', '')}")
+                
+                med = disease_info.get('medical_attention', '')
+                if med:
+                    st.markdown("**When to seek medical attention:**")
+                    st.warning(med)
             else:
                 st.info("Please consult a dermatologist for professional evaluation.")
+    else:
+        st.markdown("""
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 8px; text-align: center; color: #065f46;">
+                <p style="margin: 0; font-weight: 600;">🟢 AWAITING IMAGE SCAN</p>
+                <p style="margin: 5px 0 0 0; color: #4b5563;">Your result will appear here</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.markdown("**Description**")
+        st.markdown("A screening summary will be available after lesion analysis.")
