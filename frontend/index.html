@@ -468,9 +468,13 @@
             border-radius: var(--radius-md);
             display: none;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-            white-space: nowrap;
+            white-space: normal;
+            max-width: 85vw;
+            flex-wrap: wrap;
+            justify-content: center;
+            text-align: center;
             pointer-events: auto;
         }
 
@@ -602,6 +606,57 @@
             align-items: start;
         }
 
+        /* Gyroscope stillness indicator */
+        .gyro-status-pill {
+            position: absolute;
+            top: 56px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(3, 7, 18, 0.82);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            color: #10b981;
+            padding: 5px 14px;
+            border-radius: var(--radius-full);
+            font-size: 11.5px;
+            font-weight: 800;
+            letter-spacing: 0.07em;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+            z-index: 20;
+            backdrop-filter: blur(8px);
+        }
+        .gyro-status-pill.visible { display: flex; }
+        .gyro-status-pill.hold {
+            border-color: rgba(245, 158, 11, 0.6);
+            color: #f59e0b;
+        }
+
+        /* Scan Again button overlay */
+        .scan-again-btn {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #022c22;
+            border: none;
+            padding: 12px 28px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+            pointer-events: auto;
+            z-index: 20;
+            white-space: nowrap;
+        }
+        .scan-again-btn.visible { display: flex; }
+
         @media (max-width: 950px) {
             .scanner-grid {
                 grid-template-columns: 1fr;
@@ -609,6 +664,33 @@
             .live-scanner-container {
                 min-height: 400px;
             }
+        }
+
+        /* Mobile responsive nav */
+        @media (max-width: 640px) {
+            header.navbar {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+            nav.nav-menu {
+                gap: 2px;
+                max-width: 100%;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                scrollbar-width: none;
+            }
+            nav.nav-menu::-webkit-scrollbar { display: none; }
+            .nav-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+                gap: 3px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            .nav-badge { font-size: 8px; }
+            .header-actions { gap: 6px; }
+            .pwa-btn { font-size: 11px; padding: 6px 10px; }
+            .brand-name { font-size: 15px; }
         }
 
         .panel-card {
@@ -1366,6 +1448,12 @@
                         </button>
                     </div>
 
+                    <!-- Gyroscope Stillness Indicator -->
+                    <div class="gyro-status-pill" id="gyroPill">
+                        <span id="gyroIcon">📱</span>
+                        <span id="gyroText">HOLD STILL TO SCAN</span>
+                    </div>
+
                     <!-- Circular Reticle with Laser -->
                     <div class="hud-reticle-center">
                         <div class="reticle-laser-line"></div>
@@ -1382,6 +1470,11 @@
                             <div class="hud-live-conf" id="hudLiveConf">--%</div>
                         </div>
                     </div>
+
+                    <!-- Scan Again button (appears after result) -->
+                    <button class="scan-again-btn" id="scanAgainBtn" onclick="restartScan()">
+                        🔄 Scan Again
+                    </button>
 
                     <!-- Bottom Controls -->
                     <div class="hud-bottom-bar">
@@ -1792,6 +1885,14 @@
         let isAudioEnabled = true;
         let deferredInstallPrompt = null;
 
+        // Gyroscope state
+        let gyroEnabled = false;
+        let isDeviceStill = true; // default: still (desktop has no gyro)
+        let lastBeta = null, lastGamma = null;
+        let stillFrameCount = 0;
+        const GYRO_STILL_THRESHOLD = 1.8; // degrees delta = "still"
+        const GYRO_STILL_FRAMES = 3;      // consecutive still readings needed
+
         // Clinical Disease Knowledge Base
         const DISEASES_DB = {
             "Nevus": {
@@ -1911,6 +2012,7 @@
             updateHistoryBadge();
             renderHistoryGrid();
             startCamera();
+            setupGyroscope();
 
             // PWA beforeinstallprompt capture
             window.addEventListener("beforeinstallprompt", (e) => {
@@ -1986,6 +2088,8 @@
 
                 mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = mediaStream;
+                // Mirror front camera, don't mirror rear camera
+                video.style.transform = (facingMode === "user") ? "scaleX(-1)" : "none";
                 permPrompt.classList.remove("visible");
                 overlay.style.display = "flex";
             } catch (err) {
@@ -2032,7 +2136,9 @@
         function setZoom(factor) {
             zoomLevel = factor;
             const video = document.getElementById("liveVideo");
-            video.style.transform = `scale(${zoomLevel})`;
+            // Preserve front-camera mirror while zooming
+            const mirror = (facingMode === "user") ? "scaleX(-1) " : "";
+            video.style.transform = factor === 1 ? (facingMode === "user" ? "scaleX(-1)" : "none") : `${mirror}scale(${factor})`;
             document.querySelectorAll(".zoom-step-btn").forEach(btn => {
                 btn.classList.toggle("active", btn.innerText === `${factor}x`);
             });
@@ -2047,7 +2153,16 @@
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext("2d");
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            // Mirror the canvas when front camera is active (so AI receives correct orientation)
+            if (facingMode === "user") {
+                ctx.save();
+                ctx.scale(-1, 1);
+                ctx.translate(-canvas.width, 0);
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                ctx.restore();
+            } else {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            }
 
             return new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", 0.95));
         }
@@ -2074,6 +2189,7 @@
                 btn.classList.add("active");
                 btn.innerHTML = `<span>⚡ Realtime AI: <b>RUNNING (1.5s)</b></span>`;
                 liveCard.classList.add("visible");
+                hideScanAgainButton();
                 showToast("⚡ Continuous real-time lesion detection active");
                 runContinuousLoop();
             } else {
@@ -2093,8 +2209,38 @@
             if (liveCard) liveCard.classList.remove("visible");
         }
 
+        function showScanAgainButton() {
+            const btn = document.getElementById("scanAgainBtn");
+            if (btn) btn.classList.add("visible");
+        }
+
+        function hideScanAgainButton() {
+            const btn = document.getElementById("scanAgainBtn");
+            if (btn) btn.classList.remove("visible");
+        }
+
+        function restartScan() {
+            hideScanAgainButton();
+            isContinuousActive = true;
+            const btn = document.getElementById("continuousBtn");
+            if (btn) {
+                btn.classList.add("active");
+                btn.innerHTML = `<span>⚡ Realtime AI: <b>RUNNING (1.5s)</b></span>`;
+            }
+            const liveCard = document.getElementById("hudLiveCard");
+            if (liveCard) liveCard.classList.add("visible");
+            runContinuousLoop();
+        }
+
         async function runContinuousLoop() {
             if (!isContinuousActive) return;
+
+            // Gyroscope gate: if gyro is active and device is moving, wait and retry
+            if (gyroEnabled && !isDeviceStill) {
+                continuousTimer = setTimeout(runContinuousLoop, 300);
+                return;
+            }
+
             const blob = await getFrameBlob();
             if (blob) {
                 try {
@@ -2104,13 +2250,102 @@
                     if (res.ok) {
                         const data = await res.json();
                         updateHudLiveCard(data);
+                        // Scan-then-stop: auto-stop after one successful result
+                        stopContinuousDetection();
+                        showScanAgainButton();
+                        return; // do NOT schedule another loop
                     }
                 } catch (e) {
                     console.log("Stream inference ping error:", e);
                 }
             }
+            // Only retry if still active (error path)
             if (isContinuousActive) {
                 continuousTimer = setTimeout(runContinuousLoop, 1500);
+            }
+        }
+
+        // ==========================================
+        // GYROSCOPE STILLNESS ENGINE
+        // ==========================================
+        function setupGyroscope() {
+            if (!window.DeviceOrientationEvent) return;
+
+            const activate = () => {
+                gyroEnabled = true;
+                window.addEventListener("deviceorientation", handleOrientation);
+            };
+
+            if (typeof DeviceOrientationEvent.requestPermission === "function") {
+                // iOS 13+ requires a user gesture to grant permission
+                // Wire to the camera permission button also
+                const permBtn = document.getElementById("cameraPermPrompt");
+                if (permBtn) {
+                    permBtn.addEventListener("click", () => {
+                        DeviceOrientationEvent.requestPermission()
+                            .then(state => { if (state === "granted") activate(); })
+                            .catch(() => {});
+                    }, { once: true });
+                }
+                // Also try on first user interaction
+                document.body.addEventListener("click", function tryGyroPermOnce() {
+                    DeviceOrientationEvent.requestPermission()
+                        .then(state => { if (state === "granted") activate(); })
+                        .catch(() => {});
+                    document.body.removeEventListener("click", tryGyroPermOnce);
+                }, { once: true });
+            } else {
+                // Android / desktop — no permission required
+                activate();
+            }
+        }
+
+        function handleOrientation(event) {
+            const beta = event.beta || 0;
+            const gamma = event.gamma || 0;
+
+            if (lastBeta === null) {
+                lastBeta = beta;
+                lastGamma = gamma;
+                return;
+            }
+
+            const deltaBeta = Math.abs(beta - lastBeta);
+            const deltaGamma = Math.abs(gamma - lastGamma);
+            const motion = Math.max(deltaBeta, deltaGamma);
+
+            lastBeta = beta;
+            lastGamma = gamma;
+
+            if (motion < GYRO_STILL_THRESHOLD) {
+                stillFrameCount = Math.min(stillFrameCount + 1, GYRO_STILL_FRAMES);
+            } else {
+                stillFrameCount = 0;
+            }
+
+            const wasStill = isDeviceStill;
+            isDeviceStill = (stillFrameCount >= GYRO_STILL_FRAMES);
+
+            // Update HUD pill only when continuous mode is active
+            if (isContinuousActive) {
+                const pill = document.getElementById("gyroPill");
+                const icon = document.getElementById("gyroIcon");
+                const text = document.getElementById("gyroText");
+                if (pill) {
+                    pill.classList.add("visible");
+                    if (isDeviceStill) {
+                        pill.classList.remove("hold");
+                        if (icon) icon.textContent = "🔬";
+                        if (text) text.textContent = "SCANNING...";
+                    } else {
+                        pill.classList.add("hold");
+                        if (icon) icon.textContent = "📱";
+                        if (text) text.textContent = "HOLD STILL TO SCAN";
+                    }
+                }
+            } else {
+                const pill = document.getElementById("gyroPill");
+                if (pill) pill.classList.remove("visible");
             }
         }
 
